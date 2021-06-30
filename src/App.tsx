@@ -1,3 +1,4 @@
+import ApplicationPage from 'pages/ApplicationPage';
 import CalendarPage from 'pages/CalendarPage';
 import HistoryPage from 'pages/HistoryPage';
 import HomePage from 'pages/HomePage';
@@ -14,6 +15,7 @@ function App() {
         <Route path="/" exact component={HomePage}  />
         <Route path="/login" component={LoginPage}  />
         <Route path="/Calendar" component={CalendarPage}  />
+        <Route path="/Application" component={ApplicationPage}  />
         <Route path="/History" component={HistoryPage}  />
         <Route path="/Profile" component={ProfilePage}  />
       </Switch>

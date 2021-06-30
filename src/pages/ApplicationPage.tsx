@@ -82,7 +82,16 @@ const ListItemBox = styled.div`
 
 `;
 
-function CalendarPage () {
+const TitleBox = styled.div`
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-start;
+    align-items: center;
+    padding: 1rem 1rem;
+    font-weight: bold;
+`;
+
+function ApplicationPage () {
     // 처음 페이지가 로드 되었을 때
     // 오늘 날짜를 기준으로 전달, 이번달, 다음달을 배열로 가지고 있자?
     const [calendars, setCalendars] = useState([]);
@@ -174,6 +183,29 @@ function CalendarPage () {
 
     return (
         <LayoutComp>
+            <div style={{overflow: 'scroll'}}>
+
+            <TitleBox>휴가 신청하기</TitleBox>
+            <div style={{padding: '0.5rem 1rem', borderBottom: '2px solid #e5e5e5', display: 'flex', justifyContent: 'space-between'}}>
+                <div>휴가 종류</div>
+                <div style={{display: 'flex', flexDirection: 'row'}}>
+                    <div style={{padding: '0.1rem 0.5rem', background: 'pink', borderRadius: '16px', marginRight: '0.5rem'}}>연차</div>
+                    <div style={{padding: '0.1rem 0.5rem', background: 'pink', borderRadius: '16px', marginRight: '0.5rem'}}>특별휴가</div>
+                </div>
+            </div>
+            <div style={{padding: '0.5rem 1rem', borderBottom: '2px solid #e5e5e5', display: 'flex', justifyContent: 'space-between'}}>
+                <div>휴가 시간</div>
+                <div style={{display: 'flex', flexDirection: 'row'}}>
+                    <div style={{padding: '0.1rem 0.5rem', background: 'pink', borderRadius: '16px', marginRight: '0.5rem'}}>8h, 1일</div>
+                    <div style={{padding: '0.1rem 0.5rem', background: 'pink', borderRadius: '16px', marginRight: '0.5rem'}}>4h, 0.5일</div>
+                </div>
+            </div>
+            <div style={{padding: '0.5rem 1rem', borderBottom: '2px solid #e5e5e5', display: 'flex', flexDirection: 'column'}}>
+                <div style={{marginBottom: '0.5rem'}}>휴가 사유</div>
+                <div style={{display: 'flex', flexDirection: 'row', background: '#e5e5e5', height: '3rem', borderRadius: '8px'}}>
+
+                </div>
+            </div>
             <div style={{display:'flex', flexDirection:'row', justifyContent: 'space-between', padding: '1rem'}}>
                 <div onClick={() => jumpToMonth(0) }>
                     <FontAwesomeIcon icon={faChevronLeft} />
@@ -185,7 +217,7 @@ function CalendarPage () {
                 </div>
             </div>
 
-            <div style={{borderBottom: '2px solid #e5e5e5', display: 'flex', flexDirection: 'column'}}>
+            <div style={{ borderBottom: '2px solid #e5e5e5', display: 'flex', flexDirection: 'column'}}>
                 <div className="week" style={{display:'flex', justifyContent: 'space-around'}}>
                 {["일", "월", "화", "수", "목", "금", "토"].map(el => (
                      <span style={{width: 36, height: 24, display: 'flex', justifyContent: 'center', alignItems: 'center', color: 'darkgray'}}>{el}</span>
@@ -196,53 +228,17 @@ function CalendarPage () {
             }
             </div>
 
-
-            <div style={{overflow: 'scroll'}}>
-                {/* <div className="ListItem" style={{display: 'flex', flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', padding: '1rem'}}>
-                    <div style={{display:'flex', flexDirection: 'row', justifyContent: 'flex-start', alignItems: 'center'}}>
-                        <div style={{width: 50, height: 50, backgroundColor: 'skyblue', borderRadius: 20}}></div>
-                        <div style={{marginLeft: '1rem'}}>
-                            <div>우디</div>
-                            <div>엔지니어</div>
-                        </div>
-                    </div>
-                    <div>2021.07.03 - 2021.07.05</div>
-                </div> */}
-                <ListItemBox>
-                        <div className="left">
-                            <div style={{width: '38px', height: '38px', backgroundColor: 'skyblue', borderRadius: 16}}/>
-                            <div className="left-name-box">
-                                <div className="name">Woody (김우종)</div>
-                                <div className="position">엔지니어</div>
-                            </div>
-                        </div>
-                        
-                        <div className="right">
-                           <div className="right-date">{`2021.07.03 - 2021.07.05`}</div> 
-                           <div className="right-type">연차(3)</div>
-                        </div>
-                    </ListItemBox>
-
-                    <ListItemBox>
-                        <div className="left">
-                            <div style={{width: '38px', height: '38px', backgroundColor: 'skyblue', borderRadius: 16}}/>
-                            <div className="left-name-box">
-                                <div className="name">Woody (김우종)</div>
-                                <div className="position">엔지니어</div>
-                            </div>
-                        </div>
-                        
-                        <div className="right">
-                           <div className="right-date">{`2021.07.03 - 2021.07.05`}</div> 
-                           <div className="right-type">연차(3)</div>
-                        </div>
-                    </ListItemBox>
+            <div>휴가 사용 후, 남는 연차 일은 11일 입니다.</div>
 
 
+            <div style={{background: 'pink', padding: '0.5rem', margin: '0.5rem', borderRadius: '16px', display: 'flex', justifyContent: 'center', alignItems: 'center'}}>휴가 신청하기</div>
+            
             </div>
+
+            
             
         </LayoutComp>
     )
 }
 
-export default CalendarPage;
+export default ApplicationPage;

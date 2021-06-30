@@ -1,111 +1,122 @@
 import LayoutComp from 'components/LayoutComp';
 import React from 'react';
 import { Link } from 'react-router-dom';
+import styled from 'styled-components';
+
+const HomeBox = styled.div`
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    overflow: scroll;
+`
+
+const ListBox = styled.div`
+    display: flex;
+    flex-direction: column;
+`;
+
+const ListTitleBox = styled.div`
+    font-weight: bold;
+    /* background-color: pink; */
+    padding: 0.5rem 1rem;
+`;
+
+const ListItemBox = styled.div`
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0.5rem 1rem;
+    /* background-color: lightcoral; */
+
+    .left {
+        display: flex;
+        flex-direction: row;
+        justify-content: flex-start;
+        align-items: center;
+    }
+
+    .left-name-box {
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        margin-left: 1rem;
+        /* background-color: pink; */
+        height: 36px;
+    }
+
+    .name {
+        font-size: 1rem;
+        font-weight: 600;
+
+    }
+
+    .position {
+        font-size: 0.8rem;
+        color: darkgray;
+    }
+
+    .right {
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        align-items: flex-end;
+    }
+
+    .right-date {
+        font-size: 0.8rem;
+        color: black;
+    }
+
+    .right-type {
+        font-size: 0.8rem;
+        color: black;
+    }
+
+    
+
+`;
 
 function HomePage () {
     return (
         <LayoutComp>
-            <div className="List" style={{display: 'flex', flexDirection: 'column', width: '100%', overflow: 'scroll'}}>
-
-                <div className="ListHeader" style={{padding: '1rem', fontWeight: 700}}>휴가 중</div>
-                
-                <div className="ListItem" style={{display: 'flex', flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', padding: '1rem'}}>
-                    <div style={{display:'flex', flexDirection: 'row', justifyContent: 'flex-start', alignItems: 'center'}}>
-                        <div style={{width: 50, height: 50, backgroundColor: 'skyblue', borderRadius: 20}}></div>
-                        <div style={{marginLeft: '1rem'}}>
-                            <div>우디</div>
-                            <div>엔지니어</div>
+            <HomeBox>
+                <ListBox>
+                    <ListTitleBox><span>휴가 중</span></ListTitleBox>
+                    <ListItemBox>
+                        <div className="left">
+                            <div style={{width: '38px', height: '38px', backgroundColor: 'skyblue', borderRadius: 16}}/>
+                            <div className="left-name-box">
+                                <div className="name">Woody (김우종)</div>
+                                <div className="position">엔지니어</div>
+                            </div>
                         </div>
-                    </div>
-                    <div>2021.07.03 - 2021.07.05</div>
-                </div>
-
-                <div className="ListItem" style={{display: 'flex', flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', padding: '1rem'}}>
-                    <div style={{display:'flex', flexDirection: 'row', justifyContent: 'flex-start', alignItems: 'center'}}>
-                        <div style={{width: 50, height: 50, backgroundColor: 'skyblue', borderRadius: 20}}></div>
-                        <div style={{marginLeft: '1rem'}}>
-                            <div>우디</div>
-                            <div>엔지니어</div>
+                        
+                        <div className="right">
+                           <div className="right-date">{`2021.07.03 - 2021.07.05`}</div> 
+                           <div className="right-type">연차(3)</div>
                         </div>
-                    </div>
-                    <div>2021.07.03 - 2021.07.05</div>
-                </div>
+                    </ListItemBox>
+                </ListBox>
 
-
-
-                <div className="ListHeader" style={{padding: '1rem', fontWeight: 700, marginTop: '1rem'}}>다가오는 휴가</div>
-                
-                <div className="ListItem" style={{display: 'flex', flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', padding: '1rem'}}>
-                    <div style={{display:'flex', flexDirection: 'row', justifyContent: 'flex-start', alignItems: 'center'}}>
-                        <div style={{width: 50, height: 50, backgroundColor: 'skyblue', borderRadius: 20}}></div>
-                        <div style={{marginLeft: '1rem'}}>
-                            <div>우디</div>
-                            <div>엔지니어</div>
+                <ListBox>
+                    <ListTitleBox>다가오는 휴가</ListTitleBox>
+                    <ListItemBox>
+                        <div className="left">
+                            <div style={{width: '38px', height: '38px', backgroundColor: 'skyblue', borderRadius: 16}}/>
+                            <div className="left-name-box">
+                                <div className="name">Woody (김우종)</div>
+                                <div className="position">엔지니어</div>
+                            </div>
                         </div>
-                    </div>
-                    <div>2021.07.03 - 2021.07.05</div>
-                </div>
-
-                <div className="ListItem" style={{display: 'flex', flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', padding: '1rem'}}>
-                    <div style={{display:'flex', flexDirection: 'row', justifyContent: 'flex-start', alignItems: 'center'}}>
-                        <div style={{width: 50, height: 50, backgroundColor: 'skyblue', borderRadius: 20}}></div>
-                        <div style={{marginLeft: '1rem'}}>
-                            <div>우디</div>
-                            <div>엔지니어</div>
+                        
+                        <div className="right">
+                           <div className="right-date">{`2021.07.03 - 2021.07.05`}</div> 
+                           <div className="right-type">연차(3)</div>
                         </div>
-                    </div>
-                    <div>2021.07.03 - 2021.07.05</div>
-                </div>
-
-                <div className="ListItem" style={{display: 'flex', flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', padding: '1rem'}}>
-                    <div style={{display:'flex', flexDirection: 'row', justifyContent: 'flex-start', alignItems: 'center'}}>
-                        <div style={{width: 50, height: 50, backgroundColor: 'skyblue', borderRadius: 20}}></div>
-                        <div style={{marginLeft: '1rem'}}>
-                            <div>우디</div>
-                            <div>엔지니어</div>
-                        </div>
-                    </div>
-                    <div>2021.07.03 - 2021.07.05</div>
-                </div>
-
-                <div className="ListItem" style={{display: 'flex', flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', padding: '1rem'}}>
-                    <div style={{display:'flex', flexDirection: 'row', justifyContent: 'flex-start', alignItems: 'center'}}>
-                        <div style={{width: 50, height: 50, backgroundColor: 'skyblue', borderRadius: 20}}></div>
-                        <div style={{marginLeft: '1rem'}}>
-                            <div>우디</div>
-                            <div>엔지니어</div>
-                        </div>
-                    </div>
-                    <div>2021.07.03 - 2021.07.05</div>
-                </div>
-
-                <div className="ListItem" style={{display: 'flex', flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', padding: '1rem'}}>
-                    <div style={{display:'flex', flexDirection: 'row', justifyContent: 'flex-start', alignItems: 'center'}}>
-                        <div style={{width: 50, height: 50, backgroundColor: 'skyblue', borderRadius: 20}}></div>
-                        <div style={{marginLeft: '1rem'}}>
-                            <div>우디</div>
-                            <div>엔지니어</div>
-                        </div>
-                    </div>
-                    <div>2021.07.03 - 2021.07.05</div>
-                </div>
-
-                <div className="ListItem" style={{display: 'flex', flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', padding: '1rem'}}>
-                    <div style={{display:'flex', flexDirection: 'row', justifyContent: 'flex-start', alignItems: 'center'}}>
-                        <div style={{width: 50, height: 50, backgroundColor: 'skyblue', borderRadius: 20}}></div>
-                        <div style={{marginLeft: '1rem'}}>
-                            <div>우디</div>
-                            <div>엔지니어</div>
-                        </div>
-                    </div>
-                    <div>2021.07.03 - 2021.07.05</div>
-                </div>
-
-
-
-                {/* <div style={{marginBottom: 100}} /> */}
-
-            </div>
+                    </ListItemBox>
+                </ListBox>
+            </HomeBox>
         </LayoutComp>
     )
 }

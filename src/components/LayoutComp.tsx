@@ -8,7 +8,7 @@ interface IProps {
     children: JSX.Element | Array<JSX.Element>
 }
 
-const StyledLayout = styled.div`
+const LayoutBox = styled.div`
     position: absolute;
     left: 0;
     top: 0;
@@ -25,21 +25,7 @@ const StyledLayout = styled.div`
 
 function LayoutComp ({children}:IProps) {
     return (
-        // <div style={{
-        //     position: 'absolute',
-        //     left: 0,
-        //     top: 0,
-        //     bottom: 0,
-        //     right: 0,
-        //     background: '#e5e5e5',
-
-        //     display: 'flex',
-        //     flexDirection: 'column',
-        //     justifyContent: 'flex-start',
-        //     alignItems: 'center', 
-        //     overflow: 'scroll'
-        // }}>
-        <StyledLayout >
+        <LayoutBox >
             <header style={{
                 position: 'absolute',
                 left: 0,
@@ -80,14 +66,12 @@ function LayoutComp ({children}:IProps) {
                     <div style={{width: 500, display: 'flex', flexDirection: 'row', justifyContent: 'space-around', alignItems: 'center', listStyle: 'none', }}>
                         <Link to="/" > <FontAwesomeIcon icon={faHome} /></Link>
                         <Link to="/calendar" > <FontAwesomeIcon icon={faCalendar} /></Link>
-                        <Link to="/calendar" ><FontAwesomeIcon icon={faPlus} /></Link>
+                        <Link to="/Application" ><FontAwesomeIcon icon={faPlus} /></Link>
                         <Link to="/history" > <FontAwesomeIcon icon={faList} /></Link>
                         <Link to="/profile" > <FontAwesomeIcon icon={faUser} /></Link>
                     </div>
             </footer>
-
-
-        </StyledLayout>
+        </LayoutBox>
     )
 }
 
