@@ -27,7 +27,11 @@ const ListItemBox = styled.div`
     justify-content: space-between;
     align-items: center;
     padding: 0.5rem 1rem;
-    /* background-color: lightcoral; */
+    background-color: #e5e5e5;
+    /* background-color: #0D1116; */
+    /* border: 0.5px solid #30363D; */
+    margin: 0 0.5rem 0.5rem 0.5rem;
+    border-radius: 8px;
 
     .left {
         display: flex;
@@ -41,7 +45,6 @@ const ListItemBox = styled.div`
         flex-direction: column;
         justify-content: space-between;
         margin-left: 1rem;
-        /* background-color: pink; */
         height: 36px;
     }
 
@@ -101,6 +104,20 @@ function HomePage () {
 
                 <ListBox>
                     <ListTitleBox>다가오는 휴가</ListTitleBox>
+                    <ListItemBox>
+                        <div className="left">
+                            <div style={{width: '38px', height: '38px', backgroundColor: 'skyblue', borderRadius: 16}}/>
+                            <div className="left-name-box">
+                                <div className="name">Woody (김우종)</div>
+                                <div className="position">엔지니어</div>
+                            </div>
+                        </div>
+                        
+                        <div className="right">
+                           <div className="right-date">{`2021.07.03 - 2021.07.05`}</div> 
+                           <div className="right-type">연차(3)</div>
+                        </div>
+                    </ListItemBox>
                     <ListItemBox>
                         <div className="left">
                             <div style={{width: '38px', height: '38px', backgroundColor: 'skyblue', borderRadius: 16}}/>

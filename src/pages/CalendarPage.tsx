@@ -32,8 +32,8 @@ const ListItemBox = styled.div`
     justify-content: space-between;
     align-items: center;
     padding: 0.5rem 1rem;
-    background-color: #D8DBEF;
-    margin: 0.5rem;
+    background-color: #eeeeee;
+    margin: 0 0.5rem 0.5rem 0.5rem;
     border-radius: 8px;
 
     .left {
@@ -197,7 +197,7 @@ function CalendarPage () {
             </div>
 
 
-            <div style={{overflow: 'scroll'}}>
+            <div style={{overflow: 'scroll', paddingTop: '0.5rem'}}>
                 {/* <div className="ListItem" style={{display: 'flex', flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', padding: '1rem'}}>
                     <div style={{display:'flex', flexDirection: 'row', justifyContent: 'flex-start', alignItems: 'center'}}>
                         <div style={{width: 50, height: 50, backgroundColor: 'skyblue', borderRadius: 20}}></div>

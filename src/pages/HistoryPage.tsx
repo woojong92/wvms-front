@@ -20,7 +20,12 @@ const ListItemBox = styled.div`
     flex-direction: row;
     justify-content: space-between;
     align-items: center;
+    background: #e5e5e5;
     padding: 0.5rem 1rem;
+    margin-left: 0.5rem;
+    margin-right: 0.5rem;
+    margin-bottom: 0.5rem;
+    border-radius: 8px;
 `;
 
 const TitleBox = styled.div`
@@ -47,18 +52,56 @@ function HistoryPage () {
             <TitleBox>나의 휴가 히스토리</TitleBox>
             <ListBox >
                 <ListTitleBox>2021년</ListTitleBox>
-                <ListItemBox>
-                        <div>5월 30일 - 6월 3일</div>
-                        <div>연차(4)</div>
-                </ListItemBox>
-                <ListItemBox>
-                        <div>5월 30일 - 6월 3일</div>
-                        <div>연차(4)</div>
-                </ListItemBox>
-                <ListItemBox>
-                        <div>5월 30일 - 6월 3일</div>
-                        <div>연차(4)</div>
-                </ListItemBox>
+                <div style={{marginTop: '0.5rem'}}>
+                    <ListItemBox>
+                            <div style={{display:'flex', justifyContent:'flex-start', alignItems:'center'}}>
+                                <div style={{fontSize: '0.8rem', marginRight: '0.5rem'}}>2021.07.03 - 2021.07.05</div>
+                                <div style={{fontSize: '0.8rem'}}>연차(4)</div>
+                            </div>
+                            <div style={{border: '0px solid red', padding: '0.1rem 0.5rem', borderRadius: 16, color: 'red', fontSize: '0.8rem'}}>승인 대기중</div>
+                    </ListItemBox>
+                    <ListItemBox>
+                            <div style={{display:'flex', justifyContent:'flex-start', alignItems:'center'}}>
+                                <div style={{fontSize: '0.8rem', marginRight: '0.5rem'}}>2021.07.03 - 2021.07.05</div>
+                                <div style={{fontSize: '0.8rem'}}>연차(4)</div>
+                            </div>
+                            <div style={{border: '0px solid red', padding: '0.1rem 0.5rem', borderRadius: 16, color: 'green', fontSize: '0.8rem'}}>휴가 예정</div>
+                    </ListItemBox>
+                    <ListItemBox>
+                            <div style={{display:'flex', justifyContent:'flex-start', alignItems:'center'}}>
+                                <div style={{fontSize: '0.8rem', marginRight: '0.5rem'}}>2021.07.03 - 2021.07.05</div>
+                                <div style={{fontSize: '0.8rem'}}>연차(4)</div>
+                            </div>
+                            <div style={{border: '0px solid red', padding: '0.1rem 0.5rem', borderRadius: 16, color: 'black', fontSize: '0.8rem'}}>휴가 완료</div>
+                    </ListItemBox>
+                </div>
+            </ListBox>
+
+            <ListBox >
+                <ListTitleBox>2020년</ListTitleBox>
+                <div style={{marginTop: '0.5rem'}}>
+                    <ListItemBox>
+                            <div style={{display:'flex', justifyContent:'flex-start', alignItems:'center'}}>
+                                <div style={{fontSize: '0.8rem', marginRight: '0.5rem'}}>2021.07.03 - 2021.07.05</div>
+                                <div style={{fontSize: '0.8rem'}}>연차(4)</div>
+                            </div>
+                            <div style={{border: '0px solid red', padding: '0.1rem 0.5rem', borderRadius: 16, color: 'red', fontSize: '0.8rem'}}>승인 대기중</div>
+                    </ListItemBox>
+                    <ListItemBox>
+                            <div style={{display:'flex', justifyContent:'flex-start', alignItems:'center'}}>
+                                <div style={{fontSize: '0.8rem', marginRight: '0.5rem'}}>2021.07.03 - 2021.07.05</div>
+                                <div style={{fontSize: '0.8rem'}}>연차(4)</div>
+                            </div>
+                            <div style={{border: '0px solid red', padding: '0.1rem 0.5rem', borderRadius: 16, color: 'green', fontSize: '0.8rem'}}>휴가 예정</div>
+                    </ListItemBox>
+                    <ListItemBox>
+                            <div style={{display:'flex', justifyContent:'flex-start', alignItems:'center'}}>
+                                <div style={{fontSize: '0.8rem', marginRight: '0.5rem'}}>2021.07.03 - 2021.07.05</div>
+                                <div style={{fontSize: '0.8rem'}}>연차(4)</div>
+                            </div>
+                            <div style={{border: '0px solid red', padding: '0.1rem 0.5rem', borderRadius: 16, color: 'black', fontSize: '0.8rem'}}>휴가 완료</div>
+                    </ListItemBox>
+                </div>
             </ListBox>
 {/* 
             <ListBox >
