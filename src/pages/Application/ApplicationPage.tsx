@@ -92,19 +92,20 @@ const TitleBox = styled.div`
 `;
 
 function ApplicationPage () {
-    // 처음 페이지가 로드 되었을 때
-    // 오늘 날짜를 기준으로 전달, 이번달, 다음달을 배열로 가지고 있자?
-    // const [calendars, setCalendars] = useState([]);
 
-
+    // type prev, apply, success , failure
     const [date, setDate] = useState<moment.Moment>(() => moment());
-    const [today, setToday] = useState<moment.Moment>(() => moment());
-    const [selected, setSelected] = useState<moment.Moment | null>(null);
+    // const [today, setToday] = useState<moment.Moment>(() => moment());
+    // const [selected, setSelected] = useState<moment.Moment | null>(null);
 
-    const [startDate, setStartDate] = useState<moment.Moment | null>(null);
-    const [endDate, setEndDate] = useState<moment.Moment | null>(null);
+    const [startDate, setStartDate] = useState<moment.Moment | null>(null); // 휴가 신청 시작 날짜
+    const [endDate, setEndDate] = useState<moment.Moment | null>(null); // 휴가 신청 끝나는 날짜
 
-    // useEffect(() => {}, [selected])
+    const [submitObject, setSubmitObjet] = useState({
+        vacationType: "",
+        timeType: "",
+        vacationReason: "",
+    })
 
     const jumpToMonth = (num: number) => {
         if(num) {
@@ -115,34 +116,29 @@ function ApplicationPage () {
             setDate(date.clone().subtract(30, 'day'))
         }
     }
-    
-    // (num ? setDate(date.clone().add(30, 'day')) : setDate(date.clone().subtract(30, 'day')));
 
     const handleDayClick = (current: moment.Moment) => {
-        console.log(current)
-        // setSelected(current);
-        if(submitObject.vacationType === ''){
+        // startDate
+        console.log(current);
+        if( !moment().subtract(1,'day').isSameOrBefore(current) ) {
+            window.alert('휴가 시청 할 수 없는 날짜 입니다.');
+        }else if(submitObject.vacationType === ''){
             window.alert('휴가 유형을 선택해주세요.')
         }else if(submitObject.timeType === ''){
             window.alert('시간 유형을 선택해주세요.')
         }else if(submitObject.timeType === '4h, 0.5일') {
-            // if( startDate=== null){
-                setStartDate(current);
-                setEndDate(null);
-            // }
-            // else if(startDate.format('YYYYMMDD') === current.format('YYYYMMDD')){
-            //     setStartDate(null);
-            // }
+            setStartDate(current);
+            setEndDate(current.add(5, 'hours'));
         }else if(submitObject.timeType === '8h, 1일') {
             if(endDate) {
                 setStartDate(current);
-                setEndDate(null);
+                // setEndDate(current.add(9, 'hours'));
             }else{
                 if(!startDate || startDate.isAfter(current) ) {
                     setStartDate(current);
                     setEndDate(null);
                 } else{
-                    setEndDate(current);
+                    setEndDate(current.add(9,'hours'));
                 }
                
             }
@@ -168,31 +164,32 @@ function ApplicationPage () {
                         .clone()
                         .week(week)
                         .startOf('week')
-                        .add(n + i, 'day');
+                        .add(n + i, 'day')
+                        .add(10,'hours');
         
                       // 오늘이 current와 같다면 우선 '선택'으로 두자
                     //   let isSelected = selected.format('YYYYMMDD') === current.format('YYYYMMDD') ? 'gary' : '';
                       
-                      let _background = 'none'
-
-                    //   if(today.format('YYYYMMDD') === current.format('YYYYMMDD')){
-                    //     _background  = '#1B73E8'
-                    //   }else 
+                      let baColor = 'none'
+                      let fontColor = current.format('MM') !== date.format('MM') ? '#e5e5e5' : 'black';
                       
                       if(startDate?.format('YYYYMMDD') === current.format('YYYYMMDD')){
-                        _background  = '#1B73E8'
+                        baColor  = '#1B73E8';
+                        fontColor = '#fff';
                       }
 
                       if(startDate?.isBefore(current) && endDate?.isAfter(current) ){
-                        _background  = '#D2E2FC'
+                        baColor  = '#D2E2FC'
+                        fontColor = '#1B73E8';
                       }
 
                       if(endDate?.format('YYYYMMDD') === current.format('YYYYMMDD')){
-                        _background  = '#1B73E8'
+                        baColor  = '#1B73E8';
+                        fontColor = '#fff';
                       }
 
                       // 만약, 이번 달이 아닌 다른 달의 날짜라면 회색으로 표시하자
-                      let isGrayed = current.format('MM') !== date.format('MM') ? '#e5e5e5' : '';
+                    //   let isGrayed = current.format('MM') !== date.format('MM') ? '#e5e5e5' : '';
 
         
                       return (
@@ -205,8 +202,8 @@ function ApplicationPage () {
                                     justifyContent: 'center', 
                                     alignItems: 'center', 
                                     borderRadius: 50, 
-                                    background: _background,
-                                    color: isGrayed
+                                    background: baColor,
+                                    color: fontColor
                                 }}>{current.format('D')}</div>
                                 {/* <div style={{width: 4, height: 4, background: 'red', position: 'absolute', bottom: 5, left: 18, borderRadius: 50}}/> */}
                             </Inner>
@@ -219,13 +216,7 @@ function ApplicationPage () {
         return calendar;
     };
 
-    const [submitObject, setSubmitObjet] = useState({
-        vacationType: "",
-        timeType: "",
-        vacationReason: "",
-        // startDate: "",
-        // endDate: ""
-    })
+
 
     type HandleSubmitObjectProps = {
         name: string;
@@ -241,30 +232,36 @@ function ApplicationPage () {
         }
     }
 
+    const [apply, setApply] = useState(false);
+
     return (
         <LayoutComp>
-            <div style={{overflow: 'scroll'}}>
-
+            {
+                !apply ? (
+                    <div>
+                        휴가 신청 하실래요?
+                        <button onClick={() => setApply(true)} >휴가 신청 </button>
+                    </div>
+                ) : (
+                <div style={{overflow: 'scroll'}}>
                 <TitleBox>휴가 신청하기</TitleBox>
                 <div style={{padding: '0.5rem 1rem', borderBottom: '2px solid #e5e5e5', display: 'flex', justifyContent: 'space-between'}}>
                     <div>휴가 유형</div>
                     <div style={{display: 'flex', flexDirection: 'row'}}>
-                        <div style={{padding: '0.1rem 0.5rem', background: submitObject.vacationType === '연차' ? '#1B73E8' : 'lightgray', borderRadius: '16px', marginRight: '0.5rem'}} onClick={() => handleSubmitObject({name: 'vacationType', value: '연차'})}>연차</div>
-                        <div style={{padding: '0.1rem 0.5rem', background: submitObject.vacationType === '특별휴가' ? '#1B73E8' : 'lightgray', borderRadius: '16px', marginRight: '0.5rem'}} onClick={() => handleSubmitObject({name: 'vacationType', value: '특별휴가'})}>특별휴가</div>
+                        <div style={{padding: '0.1rem 0.5rem', background: submitObject.vacationType === '연차' ? '#1B73E8' : '#e5e5e5', color: submitObject.vacationType === '연차' ? '#ffffff' : '#111111', borderRadius: '16px', marginRight: '0.5rem'}} onClick={() => handleSubmitObject({name: 'vacationType', value: '연차'})}>연차</div>
+                        <div style={{padding: '0.1rem 0.5rem', background: submitObject.vacationType === '특별휴가' ? '#1B73E8' : '#e5e5e5', color: submitObject.vacationType === '특별휴가' ?  '#ffffff' : '#111111', borderRadius: '16px', marginRight: '0.5rem'}} onClick={() => handleSubmitObject({name: 'vacationType', value: '특별휴가'})}>특별휴가</div>
                     </div>
                 </div>
                 <div style={{padding: '0.5rem 1rem', borderBottom: '2px solid #e5e5e5', display: 'flex', justifyContent: 'space-between'}}>
                     <div>시간 유형</div>
                     <div style={{display: 'flex', flexDirection: 'row'}}>
-                        <div style={{padding: '0.1rem 0.5rem', background: submitObject.timeType === '8h, 1일' ? '#1B73E8' : 'lightgray', borderRadius: '16px', marginRight: '0.5rem'}} onClick={() => handleSubmitObject({name: 'timeType', value: '8h, 1일'})}>8h, 1일</div>
-                        <div style={{padding: '0.1rem 0.5rem', background: submitObject.timeType === '4h, 0.5일' ? '#1B73E8' : 'lightgray', borderRadius: '16px', marginRight: '0.5rem'}} onClick={() => handleSubmitObject({name: 'timeType', value: '4h, 0.5일'})}>4h, 0.5일</div>
+                        <div style={{padding: '0.1rem 0.5rem', background: submitObject.timeType === '8h, 1일' ? '#1B73E8' : '#e5e5e5', color: submitObject.timeType === '8h, 1일' ?  '#ffffff' : '#111111', borderRadius: '16px', marginRight: '0.5rem'}} onClick={() => handleSubmitObject({name: 'timeType', value: '8h, 1일'})}>8h, 1일</div>
+                        <div style={{padding: '0.1rem 0.5rem', background: submitObject.timeType === '4h, 0.5일' ? '#1B73E8' : '#e5e5e5', color: submitObject.timeType === '4h, 0.5일' ?  '#ffffff' : '#111111',borderRadius: '16px', marginRight: '0.5rem'}} onClick={() => handleSubmitObject({name: 'timeType', value: '4h, 0.5일'})}>4h, 0.5일</div>
                     </div>
                 </div>
                 <div style={{padding: '0.5rem 1rem', borderBottom: '2px solid #e5e5e5', display: 'flex', flexDirection: 'column'}}>
                     <div style={{marginBottom: '0.5rem'}}>휴가 사유</div>
-                    {/* <div style={{display: 'flex', flexDirection: 'row', background: '#e5e5e5', height: '3rem', borderRadius: '8px'}}> */}
                         <input type="text" name="email" value={submitObject.vacationReason} onChange={(e: React.ChangeEvent<HTMLInputElement>) => handleSubmitObject({name: 'vacationReason', value: e.target.value})} style={{outlineStyle: 'none', border: '0px solid gray', background: '#e5e5e5', height: '3rem', borderRadius: '8px', padding: '0.5rem'}} />
-                    {/* </div> */}
                 </div>
                 <div style={{display:'flex', flexDirection:'row', justifyContent: 'space-between', padding: '1rem'}}>
                     <div onClick={() => jumpToMonth(0) }>
@@ -288,15 +285,62 @@ function ApplicationPage () {
 
                 <div>
                     <div style={{margin: '1rem'}}>휴가 사용 후, 남는 연차 일은 11일 입니다.</div>
+                    <div 
+                        style={{background: '#1B73E8', color: 'white',  padding: '0.5rem', margin: '2rem 1rem', borderRadius: '16px', display: 'flex', justifyContent: 'center', alignItems: 'center'}}
+                        onClick={() => console.log(submitObject, startDate, endDate)}
+                    >휴가 신청하기</div>
+                </div>
+            </div> 
+                )
 
-
-                    <div style={{background: '#1B73E8', color: 'white',  padding: '0.5rem', margin: '2rem 1rem', borderRadius: '16px', display: 'flex', justifyContent: 'center', alignItems: 'center'}}>휴가 신청하기</div>
+            }
+            {/* <div style={{overflow: 'scroll'}}>
+                <TitleBox>휴가 신청하기</TitleBox>
+                <div style={{padding: '0.5rem 1rem', borderBottom: '2px solid #e5e5e5', display: 'flex', justifyContent: 'space-between'}}>
+                    <div>휴가 유형</div>
+                    <div style={{display: 'flex', flexDirection: 'row'}}>
+                        <div style={{padding: '0.1rem 0.5rem', background: submitObject.vacationType === '연차' ? '#1B73E8' : '#e5e5e5', color: submitObject.vacationType === '연차' ? '#ffffff' : '#111111', borderRadius: '16px', marginRight: '0.5rem'}} onClick={() => handleSubmitObject({name: 'vacationType', value: '연차'})}>연차</div>
+                        <div style={{padding: '0.1rem 0.5rem', background: submitObject.vacationType === '특별휴가' ? '#1B73E8' : '#e5e5e5', color: submitObject.vacationType === '특별휴가' ?  '#ffffff' : '#111111', borderRadius: '16px', marginRight: '0.5rem'}} onClick={() => handleSubmitObject({name: 'vacationType', value: '특별휴가'})}>특별휴가</div>
+                    </div>
+                </div>
+                <div style={{padding: '0.5rem 1rem', borderBottom: '2px solid #e5e5e5', display: 'flex', justifyContent: 'space-between'}}>
+                    <div>시간 유형</div>
+                    <div style={{display: 'flex', flexDirection: 'row'}}>
+                        <div style={{padding: '0.1rem 0.5rem', background: submitObject.timeType === '8h, 1일' ? '#1B73E8' : '#e5e5e5', color: submitObject.timeType === '8h, 1일' ?  '#ffffff' : '#111111', borderRadius: '16px', marginRight: '0.5rem'}} onClick={() => handleSubmitObject({name: 'timeType', value: '8h, 1일'})}>8h, 1일</div>
+                        <div style={{padding: '0.1rem 0.5rem', background: submitObject.timeType === '4h, 0.5일' ? '#1B73E8' : '#e5e5e5', color: submitObject.timeType === '4h, 0.5일' ?  '#ffffff' : '#111111',borderRadius: '16px', marginRight: '0.5rem'}} onClick={() => handleSubmitObject({name: 'timeType', value: '4h, 0.5일'})}>4h, 0.5일</div>
+                    </div>
+                </div>
+                <div style={{padding: '0.5rem 1rem', borderBottom: '2px solid #e5e5e5', display: 'flex', flexDirection: 'column'}}>
+                    <div style={{marginBottom: '0.5rem'}}>휴가 사유</div>
+                        <input type="text" name="email" value={submitObject.vacationReason} onChange={(e: React.ChangeEvent<HTMLInputElement>) => handleSubmitObject({name: 'vacationReason', value: e.target.value})} style={{outlineStyle: 'none', border: '0px solid gray', background: '#e5e5e5', height: '3rem', borderRadius: '8px', padding: '0.5rem'}} />
+                </div>
+                <div style={{display:'flex', flexDirection:'row', justifyContent: 'space-between', padding: '1rem'}}>
+                    <div onClick={() => jumpToMonth(0) }>
+                        <FontAwesomeIcon icon={faChevronLeft} />
+                    </div>
+                    
+                    <div>{date.format('YYYY. MM')}</div>
+                    <div onClick={() => jumpToMonth(1)} >
+                    <FontAwesomeIcon icon={faChevronRight} />    
+                    </div>
                 </div>
 
-            </div>  
+                <div style={{ borderBottom: '2px solid #e5e5e5', display: 'flex', flexDirection: 'column'}}>
+                    <div className="week" style={{display:'flex', justifyContent: 'space-around'}}>
+                    {["일", "월", "화", "수", "목", "금", "토"].map(el => (
+                        <span style={{width: 36, height: 24, display: 'flex', justifyContent: 'center', alignItems: 'center', color: 'darkgray'}}>{el}</span>
+                    ))}
+                    </div>
+                    <div style={{position: 'relative'}}>{generate()}</div>
+                </div>
 
-            
-            
+                <div>
+                    <div style={{margin: '1rem'}}>휴가 사용 후, 남는 연차 일은 11일 입니다.</div>
+                    <div style={{background: '#1B73E8', color: 'white',  padding: '0.5rem', margin: '2rem 1rem', borderRadius: '16px', display: 'flex', justifyContent: 'center', alignItems: 'center'}}>휴가 신청하기</div>
+                </div>
+            </div>   */}
+        
+        
         </LayoutComp>
     )
 }

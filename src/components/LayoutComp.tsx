@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faHome, faCalendar, faList , faPlus, faUser} from '@fortawesome/free-solid-svg-icons'
 import styled from 'styled-components';
+import { useAppSelector } from 'hooks';
 
 interface IProps {
     children: JSX.Element | Array<JSX.Element>
@@ -14,7 +15,7 @@ const LayoutBox = styled.div`
     top: 0;
     bottom: 0;
     right: 0;
-    background: #e5e5e5;
+    background: ${(props) => props.theme.colors.default};
 
     display: flex;
     flex-direction: column;
@@ -26,53 +27,110 @@ const LayoutBox = styled.div`
 function LayoutComp ({children}:IProps) {
     return (
         <LayoutBox >
-            <header style={{
-                position: 'absolute',
-                left: 0,
-                top: 0,
-                width: '100%',
-                height: 50,
-                borderBottom: '2px solid #e5e5e5',
-                // backgroundColor: 'red',
+            <Header />
 
-                display: 'flex',
-                justifyContent: 'center',
-                alignItems: 'center'
-            }}>
-                <div style={{width: 500, display: 'flex', flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center',listStyle: 'none', paddingLeft: '1rem', paddingRight: '1rem'}}>
-                    <Link to="/" ><div style={{color: '#47BDFE', fontSize: 20, fontWeight: 'bold'}}>WVMS</div></Link>
-                </div>
-            </header>
+            {/* <div style={{maxWidth: 500, width: '100%',display: 'flex', flexDirection: 'column', background: '#1E1E1E', height: '100%', paddingTop: 50, paddingBottom: 58 }}> */}
+                <Main>{children}</Main>
 
-            <div style={{maxWidth: 500, width: '100%',display: 'flex', flexDirection: 'column', background: 'white', height: '100%', paddingTop: 50, paddingBottom: 58 }}>
-                {
-                    children
-                }
-            </div>
 
-            <footer style={{
-                position: 'absolute',
-                left: 0,
-                bottom: 0,
-                width: '100%',
-                height: 58,
-                borderTop: '2px solid #e5e5e5',
-                // backgroundColor: 'red',
+            <BottomTabBar />
 
-                display: 'flex',
-                justifyContent: 'center', 
-                alignItems: 'center'
-            }}>
-                    <div style={{width: 500, display: 'flex', flexDirection: 'row', justifyContent: 'space-around', alignItems: 'center', listStyle: 'none', }}>
-                        <Link to="/" > <FontAwesomeIcon icon={faHome} /></Link>
-                        <Link to="/calendar" > <FontAwesomeIcon icon={faCalendar} /></Link>
-                        <Link to="/Application" ><FontAwesomeIcon icon={faPlus} /></Link>
-                        <Link to="/history" > <FontAwesomeIcon icon={faList} /></Link>
-                        <Link to="/profile" > <FontAwesomeIcon icon={faUser} /></Link>
-                    </div>
-            </footer>
         </LayoutBox>
     )
 }
+
+const MainBox = styled.div`
+    max-width: 500px;
+    width:  100%;
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    padding-top: 50px;
+    padding-bottom: 58px;
+    background-color: ${(props) => props.theme.colors.background};
+`
+const Main = ({children}:IProps) => {
+    return (
+        <MainBox>
+            {children}
+        </MainBox>
+    )
+}
+
+const HeaderBox = styled.header`
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 3rem;
+    
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    .header-content {
+        width: 500px;
+        height: 3rem;
+        display: flex;
+        flex-direction: row;
+        justify-content: space-between;
+        align-items: center;
+        list-style: none;
+        padding-left: 1rem;
+        padding-right: 1rem;
+        background-color: ${(props) => props.theme.colors.background};
+        border-bottom: ${(props) => `2px solid ${props.theme.colors.underline}`};
+    }
+`
+const Header = () => {
+    return (
+        <HeaderBox>
+            <div className="header-content">
+                <Link to="/" ><div style={{color: '#47BDFE', fontSize: 20, fontWeight: 'bold'}}>WVMS</div></Link>
+                <div></div>
+            </div>
+        </HeaderBox>
+    )
+}
+
+const BottomTabBarBox = styled.div`
+    position: absolute;
+    left: 0;
+    bottom: 0;
+    width: 100%;
+    display: flex;
+    justify-content: center; 
+    align-items: center;
+
+    .bottomTabBar-content {
+        width: 500px;
+        height: 58px;
+        display: flex;
+        flex-direction: row;
+        justify-content: space-around;
+        align-items: center;
+        list-style: none;
+        background-color: ${(props) => props.theme.colors.background};
+        border-top: ${(props) => `2px solid ${props.theme.colors.underline}`};
+    }
+
+`
+
+const BottomTabBar = () => {
+    const {isDark} = useAppSelector((state) => state.theme);
+    const iconColor = isDark ? 'white' : 'black';
+    return (
+        <BottomTabBarBox>
+                <div className="bottomTabBar-content" >
+                    <Link to="/" > <FontAwesomeIcon icon={faHome} color={iconColor}/></Link>
+                    <Link to="/calendar" > <FontAwesomeIcon icon={faCalendar}color={iconColor} /></Link>
+                    <Link to="/Application" ><FontAwesomeIcon icon={faPlus} color={iconColor}/></Link>
+                    <Link to="/history" > <FontAwesomeIcon icon={faList} color={iconColor}/></Link>
+                    <Link to="/profile" > <FontAwesomeIcon icon={faUser} color={iconColor}/></Link>
+                </div>
+        </BottomTabBarBox>
+    )
+}
+
 
 export default LayoutComp;
