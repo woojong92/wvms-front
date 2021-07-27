@@ -5,7 +5,7 @@ import styled from 'styled-components';
 import axios from 'axios';
 import { useAppDispatch, useAppSelector } from 'hooks';
 import { useEffect } from 'react';
-import { useHistory } from 'react-router-dom';
+import { Link, useHistory } from 'react-router-dom';
 import {  setProfile, setToken } from 'appSlice';
 // import styled from 'styled-components';
 
@@ -61,7 +61,13 @@ function LoginPage () {
             dispatch(setProfile(response.data.profile));
             dispatch(setToken(response.data.token));
         }catch(e){
-            console.log(e)
+            console.log('Login Error : ', e.response)
+            const {status} = e.response;
+            if( status === 400 ){
+                alert("잘못된 요청입니다.");
+            }else if(status === 401) {
+                alert("존재하지 않는 이메일이거나 비밀번호가 틀렸습니다.");
+            }
         }
     }
 
@@ -69,24 +75,35 @@ function LoginPage () {
         <LayoutBox>
            <div style={{display: 'flex', flex: 1, justifyContent: 'center', alignItems: 'center'}}>
                <div className="LoginForm" style={{padding: '2rem'}}>
-                    <div className="title" style={{display:'flex', justifyContent: 'center', alignItems: 'center', marginBottom: 36}}>
-                        <span style={{fontSize: 40, fontWeight: 'bold', color: '#47BDFE'}}>WVMS</span>
-                    </div>
+                    {/* <div className="title" style={{display:'flex', flexDirection: 'column',  justifyContent: 'center', alignItems: 'center', marginBottom: 36}}>
+                        <span style={{fontSize: 40, fontWeight: 'bold', color: '#47BDFE', }}>WVMS</span>  
+                    </div> */}
+
+                    {/* <div style={{display: 'flex', justifyContent: 'center'}}>
+                        <span style={{fontSize: 28, fontWeight: 'bold',}}>로그인</span>   
+                    </div> */}
 
                     <form style={{display: 'flex', flexDirection: 'column',  width: 300}}>
                         <div style={{display: 'flex', flexDirection: 'column', marginBottom: 24}}>
-                            {/* <label style={{marginBottom: 5}}>이메일 주소</label> */}
+                        <label style={{fontSize: '0.8rem', fontWeight: 'bold', marginBottom: 5}}>이메일</label>
                             <input type="text" name="email" value={form.email} onChange={onChange} style={{outlineStyle: 'none', border: '0.5px solid gray', borderRadius: 4, height: 36, padding: '0.3rem' }} placeholder={"Email"} />
                         </div>
 
-                        <div style={{display: 'flex', flexDirection: 'column', marginBottom: 24}}>
-                        {/* <label style={{marginBottom: 5}}>비밀번호</label> */}
-                            <input type="text" name="password"  value={form.password} onChange={onChange} style={{outlineStyle: 'none', border: '0.5px solid gray', borderRadius: 4, height: 36, padding: '0.3rem' }} placeholder={"Password"} />
+                        <div style={{display: 'flex', flexDirection: 'column', marginBottom: 32}}>
+                            <label style={{fontSize: '0.8rem', fontWeight: 'bold', marginBottom: 5}}>비밀번호</label>
+                            <input type="password" name="password"  value={form.password} onChange={onChange} style={{outlineStyle: 'none', border: '0.5px solid gray', borderRadius: 4, height: 36, padding: '0.3rem' }} placeholder={"Password"} />
                         </div>
 
                         <Button title={"로그인"} onClick={ () => handleSubmit()} />
                     </form>
+
+                    <div style={{display: 'flex', justifyContent: 'center', marginTop: 32}}>
+                        <span style={{fontSize: '0.8rem'}}>회원이 아니신가요? <Link to="/register"><a style={{color: '#409FFE', fontWeight: 'bold'}}>회원가입하기</a></Link></span>
+                    </div>
                </div>
+               <div className="title" style={{position: 'absolute', top: 100, width: '100%',display:'flex', justifyContent: 'center', alignItems: 'center', marginBottom: 36}}>
+                <span style={{fontSize: 40, fontWeight: 'bold', color: '#47BDFE'}}>WVMS</span>
+            </div>
            </div>
         </LayoutBox>
     )

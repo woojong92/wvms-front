@@ -1,5 +1,5 @@
 import React, { Children } from 'react'
-import { Link } from 'react-router-dom';
+import { Link, useHistory } from 'react-router-dom';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faHome, faCalendar, faList , faPlus, faUser} from '@fortawesome/free-solid-svg-icons'
 import styled from 'styled-components';
@@ -9,7 +9,7 @@ interface IProps {
     children: JSX.Element | Array<JSX.Element>
 }
 
-const LayoutBox = styled.div`
+export const LayoutBox = styled.div`
     position: absolute;
     left: 0;
     top: 0;
@@ -30,11 +30,10 @@ function LayoutComp ({children}:IProps) {
             <Header />
 
             {/* <div style={{maxWidth: 500, width: '100%',display: 'flex', flexDirection: 'column', background: '#1E1E1E', height: '100%', paddingTop: 50, paddingBottom: 58 }}> */}
-                <Main>{children}</Main>
+                <MainComp>{children}</MainComp>
 
 
             <BottomTabBar />
-
         </LayoutBox>
     )
 }
@@ -49,7 +48,7 @@ const MainBox = styled.div`
     padding-bottom: 58px;
     background-color: ${(props) => props.theme.colors.background};
 `
-const Main = ({children}:IProps) => {
+export const MainComp = ({children}:IProps) => {
     return (
         <MainBox>
             {children}
@@ -92,6 +91,26 @@ const Header = () => {
         </HeaderBox>
     )
 }
+
+export const Header2 = () => {
+    let history = useHistory();
+
+    let back = ( e : React.MouseEvent<HTMLDivElement, MouseEvent> )  => {
+        e.stopPropagation();
+        history.goBack();
+    };
+
+    return (
+        <HeaderBox>
+            <div className="header-content">
+                <div onClick={back}>{'<'}</div>
+                <div></div>
+            </div>
+        </HeaderBox>
+    )
+}
+
+//<div style={{color: '#47BDFE', fontSize: 20, fontWeight: 'bold'}}>WVMS</div>
 
 const BottomTabBarBox = styled.div`
     position: absolute;

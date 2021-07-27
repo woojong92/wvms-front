@@ -88,14 +88,12 @@ function CalendarPage () {
     // 처음 페이지가 로드 되었을 때
     // 오늘 날짜를 기준으로 전달, 이번달, 다음달을 배열로 가지고 있자?
     const [calendars, setCalendars] = useState([]);
-    const timeFormatter = timeFormat('%Y-%m-%d');
+    const timeFormatter = timeFormat('%Y/%m/%d');
 
     const [date, setDate] = useState<moment.Moment>(() => moment());
     const [today, setToday] = useState<moment.Moment>(() => moment());
     
     const [selected, setSelected] = useState<moment.Moment>(() => moment());
-
-    // useEffect(() => {}, [selected])
 
     const jumpToMonth = (num: number) => {
         if(num) {
@@ -116,15 +114,17 @@ function CalendarPage () {
     const [dayVacation, setDayVacation] = useState<any[]>([]);
 
     const getDayVacation = async (day: moment.Moment ) => {
+
         const localTime = day.format('YYYY-MM-DD'); // store localTime
-        const proposedDate = localTime + "T00:00:00.000Z";
+        const proposedStartDate = localTime + "T00:00:00.000Z"; 
+        const proposedEndDate = localTime + "T23:59:59.000Z";
 
         try{
             const response = await axios({
-                url: `http://localhost:3011/api/vacations?date=${proposedDate}`,
+                url: `http://localhost:3011/api/vacations?from=${proposedStartDate}&to=${proposedEndDate}`,
                 method: 'get',
             })
-            console.log(response);
+            // console.log(response);
             setDayVacation(response.data);
         }catch(e){
             console.log(e);
@@ -166,7 +166,7 @@ function CalendarPage () {
  
     useEffect(()=>{
         getMonthVacations();
-    }, []);
+    }, [date]);
 
     // const generate = () =>  {
     //     const startWeek = date.clone().startOf("month").week();
@@ -251,13 +251,10 @@ function CalendarPage () {
             <div style={{borderBottom: '2px solid #e5e5e5', display: 'flex', flexDirection: 'column'}}>
                 <div className="week" style={{display:'flex', justifyContent: 'space-around'}}>
                 {["일", "월", "화", "수", "목", "금", "토"].map(el => (
-                     <span style={{width: 36, height: 24, display: 'flex', justifyContent: 'center', alignItems: 'center', color: 'darkgray'}}>{el}</span>
+                     <span key={el} style={{width: 36, height: 24, display: 'flex', justifyContent: 'center', alignItems: 'center', color: 'darkgray'}}>{el}</span>
                 ))}
                 </div>
-                <VacationCalendar date={date} today={today} selected={selected} monthVacations={monthVacations} handleDayClick={handleDayClick}/>
-            {/* {
-                generate()
-            } */}
+                <VacationCalendar  date={date} today={today} selected={selected} monthVacations={monthVacations} handleDayClick={handleDayClick}/>
             </div>
 
 
@@ -327,7 +324,9 @@ const VacationCalendar = ({date, today, selected, monthVacations, handleDayClick
                         .clone()
                         .week(week)
                         .startOf('week')
-                        .add(n + i, 'day');
+                        .add(n + i, 'day')
+                        .add(15,'hours');
+                        
         
                       // 오늘이 current와 같다면 우선 '선택'으로 두자
                     //   let isSelected = selected.format('YYYYMMDD') === current.format('YYYYMMDD') ? 'gary' : '';

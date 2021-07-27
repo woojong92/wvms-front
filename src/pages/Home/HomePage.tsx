@@ -88,7 +88,7 @@ const ListItemBox = styled.div`
 function HomePage () {
     const history = useHistory();
     // const {user} = useAppSelector(state => state.app)
-    const timeFormatter = timeFormat('%Y-%m-%d');
+    const timeFormatter = timeFormat('%Y/%m/%d');
 
     const [commingVacations, setCommingVacations] = useState<any[]>([]);
     const [todayVacations, setTodayVacations]   = useState<any[]>([]);
@@ -153,7 +153,7 @@ function HomePage () {
                                         
                                         <div className="right">
                                         <div className="right-date">{`${timeFormatter(new Date(item.startDate))} - ${timeFormatter(new Date(item.endDate))}`}</div> 
-                                        <div className="right-type">{`${item.vacationType} (${item.usedDate})`}</div>
+                                        <div className="right-type">{`${item.vacationType} / ${item.timeType} / ${item.usedDate}`}</div>
                                         </div>
                                     </ListItemBox>
                                 )
@@ -172,7 +172,7 @@ function HomePage () {
                                 <ListItemBox key={item._id}>
                                     <div className="left">
                                         {/* <div style={{width: '38px', height: '38px', backgroundColor: 'skyblue', borderRadius: 16}}/> */}
-                                        <img src={`${item?.member?.thumbnail}`} style={{width: '38px', height: '38px', backgroundColor: 'skyblue', borderRadius: 16}}/>
+                                        <img src={`${item?.member?.thumbnail}`} style={{width: '38px', height: '38px', backgroundColor: 'skyblue', borderRadius: 16, border: '1px solid #ddd'}}/>
                                         <div className="left-name-box">
                                             <div className="name">{`${item?.member?.nickname || ''} (${item?.member?.name || ''})`}</div>
                                             <div className="position">{item?.member?.role || ''}</div>
@@ -181,7 +181,7 @@ function HomePage () {
                                     
                                     <div className="right">
                                     <div className="right-date">{`${timeFormatter(new Date(item.startDate))} - ${timeFormatter(new Date(item.endDate))}`}</div> 
-                                    <div className="right-type">{`${item.vacationType} (${item.usedDate})`}</div>
+                                    <div className="right-type">{`${item.vacationType} / ${item.timeType} / ${item.usedDate}`}</div>
                                     </div>
                                 </ListItemBox>
                             )

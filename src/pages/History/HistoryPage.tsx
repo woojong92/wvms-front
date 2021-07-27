@@ -1,6 +1,14 @@
 import LayoutComp from 'components/LayoutComp';
-import React from 'react';
+import React, { useState } from 'react';
 import styled from 'styled-components';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { faEllipsisV } from '@fortawesome/free-solid-svg-icons';
+import ReactModal from 'react-modal';
+import axios from 'axios';
+import { useEffect } from 'react';
+import { useAppSelector } from 'hooks';
+import { Link } from 'react-router-dom'; 
+import { timeFormat } from 'd3-time-format';
 
 const ListBox = styled.div`
     display: flex;
@@ -46,111 +54,95 @@ const HistoryBox = styled.div`
 
 
 function HistoryPage () {
+    // const [showModal, setShowModal] = useState<boolean>(false);
+    const profile: any  = useAppSelector(state => state.app.profile)
+    const [myVacations, setMyVacations] = useState([]);
+
+    const timeFormatter = timeFormat('%Y/%m/%d');
+
+    const getMyVacations = async () => {
+        try{
+            const response = await axios({
+                url: `http://localhost:3011/api/vacations?memberId=${profile._id}`,
+                method: 'get',
+            })
+            console.log( response);
+            // setMonthVacations(response.data);
+            setMyVacations(response.data);
+        }catch(e){
+            console.log(e);
+            // return e;
+        }
+    }
+    useEffect(()=>{getMyVacations()},[])
     return (
         <LayoutComp>
+
             <HistoryBox>
             <TitleBox>나의 휴가 히스토리</TitleBox>
             <ListBox >
-                <ListTitleBox>2021년</ListTitleBox>
-                <div style={{marginTop: '0.5rem'}}>
+                {
+                    myVacations.map((item : any) => {
+                        return (
+                            <Link key={item._id} to={{pathname: `/history/${item._id}`,}} >
+                                <ListItemBox>
+                                    <div style={{display:'flex', flexDirection: 'column',justifyContent:'flex-start', alignItems:'flex-start'}}>
+                                        <div style={{fontSize: '0.8rem', lineHeight: '1rem',marginRight: '0.5rem'}}>{`${timeFormatter(new Date(item.startDate))} - ${timeFormatter(new Date(item.endDate))}`}</div>
+                                        <div style={{fontSize: '0.8rem', lineHeight: '1rem'}}>{`${item.vacationType} / ${item.timeType} / ${item.usedDate}`}</div>
+                                        {/* <div style={{fontSize: '0.8rem', marginRight: '0.5rem'}}>{`종료일 : 2021/07/08`}</div> */}
+                                    </div>
+                                    <div style={{display: 'flex', flexDirection: 'row', justifyContent: 'center', alignItems: 'center'}}>
+                                        <div style={{border: '1px solid red', padding: '0.1rem 0.5rem', borderRadius: 16, color: 'red', fontSize: '0.8rem', marginRight: '1rem'}}>승인 대기</div>
+                                        <FontAwesomeIcon icon={faEllipsisV} size={'xs'} color={'#555'} />  
+                                    </div>
+                                </ListItemBox>
+                            </Link>
+                        )
+                    })
+                }
+
+
+            <Link to={{pathname: `/history/${1}`,}} >
+                <ListItemBox>
+                        <div style={{display:'flex', flexDirection: 'column',justifyContent:'flex-start', alignItems:'flex-start'}}>
+                            <div style={{fontSize: '0.8rem', lineHeight: '1rem',marginRight: '0.5rem'}}>{`2021/07/05 - 2021/07/08`}</div>
+                            <div style={{fontSize: '0.8rem', lineHeight: '1rem'}}>연차 / 하루종일 / 4</div>
+                            {/* <div style={{fontSize: '0.8rem', marginRight: '0.5rem'}}>{`종료일 : 2021/07/08`}</div> */}
+                        </div>
+                        <div style={{display: 'flex', flexDirection: 'row', justifyContent: 'center', alignItems: 'center'}}>
+                            <div style={{border: '1px solid red', padding: '0.1rem 0.5rem', borderRadius: 16, color: 'red', fontSize: '0.8rem', marginRight: '1rem'}}>승인 대기</div>
+                            <FontAwesomeIcon icon={faEllipsisV} size={'xs'} color={'#555'} />  
+                        </div>
+                </ListItemBox>
+            </Link>
+
                     <ListItemBox>
-                            <div style={{display:'flex', justifyContent:'flex-start', alignItems:'center'}}>
-                                <div style={{fontSize: '0.8rem', marginRight: '0.5rem'}}>2021.07.03 - 2021.07.05</div>
-                                <div style={{fontSize: '0.8rem'}}>연차(4)</div>
+                            <div style={{display:'flex', flexDirection: 'column',justifyContent:'flex-start', alignItems:'flex-start'}}>
+                                <div style={{fontSize: '0.8rem', lineHeight: '1rem',marginRight: '0.5rem'}}>{`2021/07/05 - 2021/07/08`}</div>
+                                <div style={{fontSize: '0.8rem', lineHeight: '1rem'}}>연차 / 하루종일 / 4</div>
                             </div>
-                            <div style={{border: '0px solid red', padding: '0.1rem 0.5rem', borderRadius: 16, color: 'red', fontSize: '0.8rem'}}>승인 대기중</div>
+                            <div style={{display: 'flex', flexDirection: 'row', justifyContent: 'center', alignItems: 'center'}}>
+                                <div style={{border: '1px solid #35AE55', padding: '0.1rem 0.5rem', borderRadius: 16, color: '#35AE55', fontSize: '0.8rem', marginRight: '1rem'}}>휴가 예정</div>
+                                <div>
+                                    <FontAwesomeIcon icon={faEllipsisV} size={'xs'} color={'#555'} />  
+                                </div>
+                                
+                            </div>
                     </ListItemBox>
+
                     <ListItemBox>
-                            <div style={{display:'flex', justifyContent:'flex-start', alignItems:'center'}}>
-                                <div style={{fontSize: '0.8rem', marginRight: '0.5rem'}}>2021.07.03 - 2021.07.05</div>
-                                <div style={{fontSize: '0.8rem'}}>연차(4)</div>
+                            <div style={{display:'flex', flexDirection: 'column',justifyContent:'flex-start', alignItems:'flex-start'}}>
+                                <div style={{fontSize: '0.8rem', lineHeight: '1rem',marginRight: '0.5rem'}}>{`2021/07/05 - 2021/07/08`}</div>
+                                <div style={{fontSize: '0.8rem', lineHeight: '1rem'}}>연차 / 하루종일 / 4</div>
                             </div>
-                            <div style={{border: '0px solid red', padding: '0.1rem 0.5rem', borderRadius: 16, color: 'green', fontSize: '0.8rem'}}>휴가 예정</div>
-                    </ListItemBox>
-                    <ListItemBox>
-                            <div style={{display:'flex', justifyContent:'flex-start', alignItems:'center'}}>
-                                <div style={{fontSize: '0.8rem', marginRight: '0.5rem'}}>2021.07.03 - 2021.07.05</div>
-                                <div style={{fontSize: '0.8rem'}}>연차(4)</div>
+                            <div style={{display: 'flex', flexDirection: 'row', justifyContent: 'center', alignItems: 'center'}}>
+                                <div style={{border: '1px solid #409FFE', padding: '0.1rem 0.5rem', borderRadius: 16, color: '#409FFE', fontSize: '0.8rem', marginRight: '1rem'}}>휴가 완료</div>
+                                <FontAwesomeIcon icon={faEllipsisV} size={'xs'} color={'#555'} />  
                             </div>
-                            <div style={{border: '0px solid red', padding: '0.1rem 0.5rem', borderRadius: 16, color: 'black', fontSize: '0.8rem'}}>휴가 완료</div>
                     </ListItemBox>
-                </div>
             </ListBox>
 
-            <ListBox >
-                <ListTitleBox>2020년</ListTitleBox>
-                <div style={{marginTop: '0.5rem'}}>
-                    <ListItemBox>
-                            <div style={{display:'flex', justifyContent:'flex-start', alignItems:'center'}}>
-                                <div style={{fontSize: '0.8rem', marginRight: '0.5rem'}}>2021.07.03 - 2021.07.05</div>
-                                <div style={{fontSize: '0.8rem'}}>연차(4)</div>
-                            </div>
-                            <div style={{border: '0px solid red', padding: '0.1rem 0.5rem', borderRadius: 16, color: 'red', fontSize: '0.8rem'}}>승인 대기중</div>
-                    </ListItemBox>
-                    <ListItemBox>
-                            <div style={{display:'flex', justifyContent:'flex-start', alignItems:'center'}}>
-                                <div style={{fontSize: '0.8rem', marginRight: '0.5rem'}}>2021.07.03 - 2021.07.05</div>
-                                <div style={{fontSize: '0.8rem'}}>연차(4)</div>
-                            </div>
-                            <div style={{border: '0px solid red', padding: '0.1rem 0.5rem', borderRadius: 16, color: 'green', fontSize: '0.8rem'}}>휴가 예정</div>
-                    </ListItemBox>
-                    <ListItemBox>
-                            <div style={{display:'flex', justifyContent:'flex-start', alignItems:'center'}}>
-                                <div style={{fontSize: '0.8rem', marginRight: '0.5rem'}}>2021.07.03 - 2021.07.05</div>
-                                <div style={{fontSize: '0.8rem'}}>연차(4)</div>
-                            </div>
-                            <div style={{border: '0px solid red', padding: '0.1rem 0.5rem', borderRadius: 16, color: 'black', fontSize: '0.8rem'}}>휴가 완료</div>
-                    </ListItemBox>
-                </div>
-            </ListBox>
-{/* 
-            <ListBox >
-                <ListTitleBox>2020년</ListTitleBox>
-                <ListItemBox>
-                        <div>5월 30일 - 6월 3일</div>
-                        <div>연차(4)</div>
-                </ListItemBox>
-                <ListItemBox>
-                        <div>5월 30일 - 6월 3일</div>
-                        <div>연차(4)</div>
-                </ListItemBox>
-                <ListItemBox>
-                        <div>5월 30일 - 6월 3일</div>
-                        <div>연차(4)</div>
-                </ListItemBox>
-            </ListBox>
-
-            <ListBox >
-                <ListTitleBox>2020년</ListTitleBox>
-                <ListItemBox>
-                        <div>5월 30일 - 6월 3일</div>
-                        <div>연차(4)</div>
-                </ListItemBox>
-                <ListItemBox>
-                        <div>5월 30일 - 6월 3일</div>
-                        <div>연차(4)</div>
-                </ListItemBox>
-                <ListItemBox>
-                        <div>5월 30일 - 6월 3일</div>
-                        <div>연차(4)</div>
-                </ListItemBox>
-            </ListBox>
-
-            <ListBox >
-                <ListTitleBox>2020년</ListTitleBox>
-                <ListItemBox>
-                        <div>5월 30일 - 6월 3일</div>
-                        <div>연차(4)</div>
-                </ListItemBox>
-                <ListItemBox>
-                        <div>5월 30일 - 6월 3일</div>
-                        <div>연차(4)</div>
-                </ListItemBox>
-                <ListItemBox>
-                        <div>5월 30일 - 6월 3일</div>
-                        <div>연차(4)</div>
-                </ListItemBox>
-            </ListBox> */}
+           
             </HistoryBox>
         </LayoutComp>
     )
