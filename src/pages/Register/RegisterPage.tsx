@@ -10,6 +10,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faEye, faEyeSlash} from '@fortawesome/free-solid-svg-icons'
 import {  setProfile, setToken } from 'appSlice';
 import moment from 'moment';
+import { API_ADDRESS } from 'apis';
 // import styled from 'styled-components';
 
 const LayoutBox = styled.div`
@@ -83,7 +84,7 @@ function RegisterPage () {
         console.log(data);
         try{
             const response = await axios({
-                url: 'http://localhost:3011/api/auth/register',
+                url: `${API_ADDRESS}/auth/register`,
                 method: 'post',
                 data: data,
             })

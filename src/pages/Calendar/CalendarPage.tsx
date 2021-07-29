@@ -6,6 +6,8 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faChevronCircleRight, faChevronLeft, faChevronRight } from '@fortawesome/free-solid-svg-icons';
 import axios from 'axios';
 import { timeFormat } from 'd3-time-format';
+import { TimeFormat_Ymd } from 'utils/timeFormatter';
+import { API_ADDRESS } from 'apis';
 
 const Square = styled.div`
     width: 50%;
@@ -93,7 +95,7 @@ function CalendarPage () {
     const [date, setDate] = useState<moment.Moment>(() => moment());
     const [today, setToday] = useState<moment.Moment>(() => moment());
     
-    const [selected, setSelected] = useState<moment.Moment>(() => moment());
+    const [selected, setSelected] = useState<moment.Moment>(() => moment().hours(15));
 
     const jumpToMonth = (num: number) => {
         if(num) {
@@ -108,23 +110,23 @@ function CalendarPage () {
     const handleDayClick = (current: moment.Moment) : void => {
         console.log(current)
         setSelected(current);
-        getDayVacation(current);
+        // getDayVacation(current);
     }
 
     const [dayVacation, setDayVacation] = useState<any[]>([]);
 
     const getDayVacation = async (day: moment.Moment ) => {
-
+        console.log('getDayVacation');
         const localTime = day.format('YYYY-MM-DD'); // store localTime
         const proposedStartDate = localTime + "T00:00:00.000Z"; 
         const proposedEndDate = localTime + "T23:59:59.000Z";
 
         try{
             const response = await axios({
-                url: `http://localhost:3011/api/vacations?from=${proposedStartDate}&to=${proposedEndDate}`,
+                url: `${API_ADDRESS}/vacations?from=${proposedStartDate}&to=${proposedEndDate}`,
                 method: 'get',
             })
-            // console.log(response);
+            console.log(response);
             setDayVacation(response.data);
         }catch(e){
             console.log(e);
@@ -153,7 +155,7 @@ function CalendarPage () {
         console.log(proposedStartDate, proposedEndDate);
         try{
             const response = await axios({
-                url: `http://localhost:3011/api/vacations?from=${proposedStartDate}&to=${proposedEndDate}`,
+                url: `${API_ADDRESS}/vacations?from=${proposedStartDate}&to=${proposedEndDate}`,
                 method: 'get',
             })
             console.log( response);
@@ -166,74 +168,14 @@ function CalendarPage () {
  
     useEffect(()=>{
         getMonthVacations();
+        setDayVacation([]);  
     }, [date]);
 
-    // const generate = () =>  {
-    //     const startWeek = date.clone().startOf("month").week();
-    //     const endWeek = date.clone().endOf("month").week() === 1 ? 53 :  date.clone().endOf("month").week();
+    useEffect(()=>{
         
-    //     let calendar = [];
-
-    //     for (let week = startWeek; week <= endWeek; week++ ){
-    //         calendar.push(
-    //             <div className="week" style={{display:'flex', justifyContent: 'space-between'}} key={week}>
-    //               {Array(7)
-    //                 .fill(0)
-    //                 .map((n, i) => {
-    //                   // 오늘 => 주어진 주의 시작 => n + i일 만큼 더해서 각 주의 '일'을 표기한다.
-    //                   let current = date
-    //                     .clone()
-    //                     .week(week)
-    //                     .startOf('week')
-    //                     .add(n + i, 'day');
-        
-    //                   // 오늘이 current와 같다면 우선 '선택'으로 두자
-    //                 //   let isSelected = selected.format('YYYYMMDD') === current.format('YYYYMMDD') ? 'gary' : '';
-                      
-    //                   let baColor = 'none';
-    //                   let fontColor = current.format('MM') !== date.format('MM') ? '#e5e5e5' : '';
-
-    //                   if(today.format('YYYYMMDD') === current.format('YYYYMMDD')){
-    //                     baColor  = '#1B73E8';
-    //                     fontColor = '#fff';
-    //                   }else if(selected.format('YYYYMMDD') === current.format('YYYYMMDD')){
-    //                     baColor  = '#D2E2FC';
-    //                     fontColor = '#1B73E8';
-    //                   }
-
-    //                 //   const _hasEvent =  hasEvent(current);
-
-    //                   // 만약, 이번 달이 아닌 다른 달의 날짜라면 회색으로 표시하자
-    //                 //   let isGrayed = current.format('MM') !== date.format('MM') ? '#e5e5e5' : '';
-
-    //                   return (
-    //                     <Square key={i} onClick={() => handleDayClick(current)}> 
-    //                         <Inner>
-    //                             <div style={{
-    //                                 width: 40, 
-    //                                 height: 40, 
-    //                                 display: 'flex', 
-    //                                 justifyContent: 'center', 
-    //                                 alignItems: 'center', 
-    //                                 borderRadius: 50, 
-    //                                 background: baColor,
-    //                                 color: fontColor
-    //                             }}>{current.format('D')}</div>
-    //                             {/* { 
-    //                             _hasEvent 
-    //                                 ? <div style={{width: 4, height: 4, background: 'red', position: 'absolute', bottom: 5, left: 18, borderRadius: 50}}/>
-    //                                 : null
-    //                             } */}
-    //                             {/* <div style={{width: 4, height: 4, background: 'red', position: 'absolute', bottom: 5, left: 18, borderRadius: 50}}/> */}
-    //                         </Inner>
-    //                     </Square>
-    //                   );
-    //                 })}
-    //             </div>,
-    //           );
-    //     }
-    //     return calendar;
-    // };
+        // const today = moment();
+        getDayVacation(selected);
+    }, [selected]);
 
     return (
         <LayoutComp>
@@ -259,22 +201,11 @@ function CalendarPage () {
 
 
             <div style={{overflow: 'scroll', paddingTop: '0.5rem'}}>
-                {/* <div className="ListItem" style={{display: 'flex', flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', padding: '1rem'}}>
-                    <div style={{display:'flex', flexDirection: 'row', justifyContent: 'flex-start', alignItems: 'center'}}>
-                        <div style={{width: 50, height: 50, backgroundColor: 'skyblue', borderRadius: 20}}></div>
-                        <div style={{marginLeft: '1rem'}}>
-                            <div>우디</div>
-                            <div>엔지니어</div>
-                        </div>
-                    </div>
-                    <div>2021.07.03 - 2021.07.05</div>
-                </div> */}
                 {
                     dayVacation.map(item => {
                         return (
                             <ListItemBox key={item._id}>
                             <div className="left">
-                                {/* <div style={{width: '38px', height: '38px', backgroundColor: 'skyblue', borderRadius: 16}}/> */}
                                 <img src={`${item?.member?.thumbnail}`} style={{width: '38px', height: '38px', backgroundColor: 'skyblue', borderRadius: 16}}/>
                                 <div className="left-name-box">
                                     <div className="name">{`${item?.member?.nickname || ''} (${item?.member?.name || ''})`}</div>
@@ -283,7 +214,7 @@ function CalendarPage () {
                             </div>
                             
                             <div className="right">
-                            <div className="right-date">{`${timeFormatter(new Date(item.startDate))} - ${timeFormatter(new Date(item.endDate))}`}</div> 
+                            <div className="right-date">{`${TimeFormat_Ymd(new Date(item.startDate))} - ${TimeFormat_Ymd(new Date(item.endDate))}`}</div> 
                             <div className="right-type">{`${item.vacationType} (${item.usedDate})`}</div>
                             </div>
                         </ListItemBox>

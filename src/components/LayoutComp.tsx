@@ -1,9 +1,10 @@
 import React, { Children } from 'react'
 import { Link, useHistory } from 'react-router-dom';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faHome, faCalendar, faList , faPlus, faUser} from '@fortawesome/free-solid-svg-icons'
+import { faHome, faCalendar, faList , faPlus, faUser, faBackspace, faBackward, faChevronLeft} from '@fortawesome/free-solid-svg-icons'
 import styled from 'styled-components';
 import { useAppSelector } from 'hooks';
+
 
 interface IProps {
     children: JSX.Element | Array<JSX.Element>
@@ -103,7 +104,10 @@ export const Header2 = () => {
     return (
         <HeaderBox>
             <div className="header-content">
-                <div onClick={back}>{'<'}</div>
+                <div onClick={back}>
+                    <FontAwesomeIcon icon={faChevronLeft} size={'sm'} color={'#555'} /> 
+                </div>
+               
                 <div></div>
             </div>
         </HeaderBox>
@@ -135,7 +139,7 @@ const BottomTabBarBox = styled.div`
 
 `
 
-const BottomTabBar = () => {
+export const BottomTabBar = () => {
     const {isDark} = useAppSelector((state) => state.theme);
     const iconColor = isDark ? 'white' : 'black';
     return (

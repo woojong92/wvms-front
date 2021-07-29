@@ -8,13 +8,17 @@ import HomePage from 'pages/Home/HomePage';
 import LoginPage from 'pages/Login/LoginPage';
 import ProfilePage from 'pages/Profile/ProfilePage';
 
-import { BrowserRouter, Route, Switch, Redirect, useParams } from 'react-router-dom';
+import { BrowserRouter, Route, Switch, Redirect, useParams, useHistory } from 'react-router-dom';
 
 import { ThemeProvider } from "styled-components";
 import theme from 'theme/theme';
 import { useAppDispatch, useAppSelector } from 'hooks';
 import { useEffect } from 'react';
 import RegisterPage from 'pages/Register/RegisterPage';
+import { setProfile, setToken } from 'appSlice';
+import axios from 'axios';
+import { getProfile } from 'apis';
+
 
 const { darkTheme, lightTheme } = theme;
 
@@ -23,11 +27,51 @@ function App() {
   const {isDark} = useAppSelector((state) => state.theme)
   const dispatch = useAppDispatch()
 
-
+  const history = useHistory();
 
   // useEffect(()=>{
   //   console.log(isDark);
   // }, [isDark])
+  // const getProfile = async (token: string) => {
+  //   try{
+  //     const response = await axios({
+  //       url: 'http://localhost:3011/api/auth/profile',
+  //       method: 'get',
+  //       headers: { Authorization: `Bearer ${token}` },
+  //   })
+  //   console.log('getProfile : ', response);
+  //   return response;
+  
+  //   // return response;
+
+  //   }catch(e) {
+  //     console.log('getProfile Error :', e)
+  //     return e.response;
+  //   }
+  // }
+
+ 
+  const dispachProfile = async (token: string) => {
+    const response = await getProfile(token);
+    if(response.status === 200 ){
+      dispatch(setProfile(response.data));
+    }
+  }
+
+  useEffect(()=>{
+    const access_token = localStorage.getItem('access_token');
+    console.log('access_token', access_token)
+    if(access_token) {
+      dispatch(setToken(access_token));
+      dispachProfile(access_token);
+      // history.push('/');
+     
+      // getProfile(access_token);
+      // console.log(response);
+      // if(response.status === 200) 
+      //   dispatch(setProfile(response.data));
+    }
+  }, [])
 
   return (
     <BrowserRouter>

@@ -8,6 +8,8 @@ import { useAppSelector } from 'hooks';
 import axios from 'axios';
 import moment from 'moment';
 import { timeFormat } from 'd3-time-format';
+import { TimeFormat_Ymd } from 'utils/timeFormatter';
+import { API_ADDRESS } from 'apis';
 
 const HomeBox = styled.div`
     display: flex;
@@ -94,12 +96,16 @@ function HomePage () {
     const [todayVacations, setTodayVacations]   = useState<any[]>([]);
 
     const getTodayVacations = async () => {
-        const localTime = moment().format('YYYY-MM-DD'); // store localTime
-        const proposedDate = localTime + "T00:00:00.000Z";
+        // const localTime = moment().format('YYYY-MM-DD'); // store localTime
+        // const proposedDate = localTime + "T00:00:00.000Z";
         
+        const localTime = moment().format('YYYY-MM-DD'); // store localTime
+        const proposedStartDate = localTime + "T00:00:00.000Z"; 
+        const proposedEndDate = localTime + "T23:59:59.000Z";
+
         try{
             const response = await axios({
-                url: `http://localhost:3011/api/vacations?date=${proposedDate}`,
+                url: `${API_ADDRESS}/vacations?from=${proposedStartDate}&to=${proposedEndDate}`,
                 method: 'get',
             })
             console.log(response);
@@ -112,12 +118,12 @@ function HomePage () {
     const getCommingVacations = async () => {
         const startDate = moment().add(1, 'days').format('YYYY-MM-DD'); // store localTime
         const proposedStartDate = startDate + "T00:00:00.000Z";
-        const endDate = moment().add(30, 'days').format('YYYY-MM-DD');
-        const proposedEndDate = endDate + "T00:00:00.000Z";
+        const endDate = moment().add(14, 'days').format('YYYY-MM-DD');
+        const proposedEndDate = endDate + "T23:59:59.000Z";
 
         try{
             const response = await axios({
-                url: `http://localhost:3011/api/vacations?from=${proposedStartDate}&to=${proposedEndDate}`,
+                url: `${API_ADDRESS}/vacations?from=${proposedStartDate}&to=${proposedEndDate}`,
                 method: 'get',
             })
             console.log('getCommingVacations', response);
@@ -136,7 +142,7 @@ function HomePage () {
         <LayoutComp>
             <HomeBox>
                 <ListBox>
-                    <ListTitleBox><span>휴가 중</span></ListTitleBox>
+                    <ListTitleBox><span>나를 찾지 마세요 🏖</span></ListTitleBox>
                     {
                         todayVacations.length ? (
                             todayVacations?.map(item => {
@@ -152,7 +158,7 @@ function HomePage () {
                                         </div>
                                         
                                         <div className="right">
-                                        <div className="right-date">{`${timeFormatter(new Date(item.startDate))} - ${timeFormatter(new Date(item.endDate))}`}</div> 
+                                        <div className="right-date">{`${TimeFormat_Ymd(new Date(item.startDate))} - ${TimeFormat_Ymd(new Date(item.endDate))}`}</div> 
                                         <div className="right-type">{`${item.vacationType} / ${item.timeType} / ${item.usedDate}`}</div>
                                         </div>
                                     </ListItemBox>
@@ -165,7 +171,7 @@ function HomePage () {
                 </ListBox>
 
                 <ListBox>
-                    <ListTitleBox>다가오는 휴가</ListTitleBox>
+                    <ListTitleBox>다음 휴가는 접니다 🚴‍♂️ </ListTitleBox>
                     {
                         commingVacations?.map(item => {
                             return (
@@ -180,7 +186,7 @@ function HomePage () {
                                     </div>
                                     
                                     <div className="right">
-                                    <div className="right-date">{`${timeFormatter(new Date(item.startDate))} - ${timeFormatter(new Date(item.endDate))}`}</div> 
+                                    <div className="right-date">{`${TimeFormat_Ymd(new Date(item.startDate))} - ${TimeFormat_Ymd(new Date(item.endDate))}`}</div> 
                                     <div className="right-type">{`${item.vacationType} / ${item.timeType} / ${item.usedDate}`}</div>
                                     </div>
                                 </ListItemBox>

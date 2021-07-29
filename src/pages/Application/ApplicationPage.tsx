@@ -5,8 +5,10 @@ import styled from 'styled-components';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faChevronCircleRight, faChevronLeft, faChevronRight } from '@fortawesome/free-solid-svg-icons';
 import axios from 'axios';
-import { useAppSelector } from 'hooks';
+import { useAppDispatch, useAppSelector } from 'hooks';
 import { unstable_batchedUpdates } from 'react-dom';
+import { setProfile } from 'appSlice';
+import { API_ADDRESS, getProfile } from 'apis';
 
 const Square = styled.div`
     width: 50%;
@@ -104,8 +106,9 @@ interface IVacationCounts {
 
 function ApplicationPage () {
 
-    const { token} = useAppSelector(state => state.app);
+    const { token } = useAppSelector(state => state.app);
     const profile: any  = useAppSelector(state => state.app.profile)
+    const dispatch = useAppDispatch();
 
     const [thiYear, setThisYear] = useState<number>(() => moment().get('year'))  
     const [thisYearVacationCounts, setThisYearVacationCounts] = useState<IVacationCounts>({
@@ -116,13 +119,20 @@ function ApplicationPage () {
         _id: "id"
     })
 
+    const dispachProfile = async (token: string) => {
+        const response = await getProfile(token);
+        if(response.status === 200 ){
+          dispatch(setProfile(response.data));
+        }
+      }
+
     useEffect(()=>{
         // console.log(moment().get('year'))
         console.log(profile)
         const thisYearVacationCounts = profile.vacationCounts.filter((item : {year: number} ) => item.year === moment().get('year'));
         setThisYearVacationCounts(thisYearVacationCounts[0]);
         console.log(thisYearVacationCounts)
-        
+        dispachProfile(token);
     },[]);
 
     const [date, setDate] = useState<moment.Moment>(() => moment());
@@ -146,32 +156,22 @@ function ApplicationPage () {
     }
 
     const handleDayClick = (current: moment.Moment) => {
-        // startDate
-        // console.log('current', current);
         if( !moment().subtract(1,'day').isSameOrBefore(current) ) {
-            window.alert('휴가 시청 할 수 없는 날짜 입니다.');
+            window.alert('휴가 신청을 할 수 없는 날짜 입니다.');
         }else if(submitObject.vacationType === ''){
             window.alert('휴가 유형을 선택해주세요.')
         }else if(submitObject.timeType === ''){
             window.alert('시간 유형을 선택해주세요.')
         }else if(submitObject.timeType === '오전반차' || submitObject.timeType === '오후반차' ) {
+            console.log('aaaa', thisYearVacationCounts.totalDate - thisYearVacationCounts.usedDate - 0.5);
+            if(thisYearVacationCounts.totalDate - thisYearVacationCounts.usedDate - 0.5 < 0) {
+                window.alert('죄송합니다. 남은 연차가 부족합니다.');
+                return;
+            }
             setStartDate(current);
-            // let _endDate = current;
-
-            // setEndDate(_endDate.add(5, 'hours'));
             setEndDate(null);
             setUsedDate(0.5);
-            console.log('_usedDate', 0.5)
-        } 
-        // else if(submitObject.timeType === '오후반차') {
-        //     let _startDate = current;
-        //     setStartDate(_startDate.add(5, 'hours'));
-        //     setEndDate(_startDate.add(4, 'hours'));
-        //     setUsedDate(0.5);
-        //     // console.log('_usedDate', 0.5)
-        
-        // }
-        else if(submitObject.timeType === '하루종일') {
+        } else if(submitObject.timeType === '하루종일') {
             if(endDate) {
                 console.log('startDate', current)
                 setStartDate(current);
@@ -181,6 +181,11 @@ function ApplicationPage () {
             }else{
                 if(!startDate || startDate.isAfter(current) ) {
                     console.log('startDate', current)
+                    if(thisYearVacationCounts.totalDate - thisYearVacationCounts.usedDate - 1 < 0) {
+                        window.alert('죄송합니다. 남은 연차가 부족합니다.');
+                        return;
+                    }
+
                     setStartDate(current);
                     setEndDate(null);
                     setUsedDate(1);
@@ -189,6 +194,10 @@ function ApplicationPage () {
                     // let _endDate = moment(startDate).add(9, 'hours').format();
                     let _current = current;
                     let _usedDate = moment(_current.add(9,'hours')).diff(startDate, 'days') + 1;
+                    if(thisYearVacationCounts.totalDate - thisYearVacationCounts.usedDate - _usedDate < 0) {
+                        window.alert('죄송합니다. 남은 연차가 부족합니다.');
+                        return;
+                    }
                     
                     console.log('_usedDate', _usedDate)
                     setEndDate(_current);
@@ -289,6 +298,10 @@ function ApplicationPage () {
     }
 
     const handleSubmit = async () => {
+        if(usedDate === 0) {
+            window.alert('휴가를 신청할 날짜를 선택하세요.')
+            return;
+        }
         let data = { ...submitObject, 
             usedDate,
             startDate: moment(startDate).format(), 
@@ -306,7 +319,7 @@ function ApplicationPage () {
                     // usedDate: _usedDate,
                 }
             }else{
-                let _usedDate = moment(endDate).diff(startDate, 'days') + 1
+                // let _usedDate = moment(endDate).diff(startDate, 'days') + 1
                 data = {
                     ...data,
                     // usedDate: _usedDate,
@@ -338,7 +351,7 @@ function ApplicationPage () {
 
         try{
             const response = await axios({
-                url: 'http://localhost:3011/api/vacations',
+                url: `${API_ADDRESS}/vacations`,
                 method: 'post',
                 data: data,
                 headers: { Authorization: `Bearer ${token}` },

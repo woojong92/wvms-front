@@ -7,6 +7,7 @@ import { useAppDispatch, useAppSelector } from 'hooks';
 import { useEffect } from 'react';
 import { Link, useHistory } from 'react-router-dom';
 import {  setProfile, setToken } from 'appSlice';
+import { API_ADDRESS } from 'apis';
 // import styled from 'styled-components';
 
 const LayoutBox = styled.div`
@@ -51,7 +52,7 @@ function LoginPage () {
     const handleSubmit = async () => {
         try{
             const response = await axios({
-                url: 'http://localhost:3011/api/auth/login',
+                url: `${API_ADDRESS}/auth/login`,
                 method: 'post',
                 data: form,
             })
@@ -60,6 +61,8 @@ function LoginPage () {
 
             dispatch(setProfile(response.data.profile));
             dispatch(setToken(response.data.token));
+
+            localStorage.setItem("access_token", response.data.token);
         }catch(e){
             console.log('Login Error : ', e.response)
             const {status} = e.response;
