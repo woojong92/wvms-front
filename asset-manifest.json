@@ -1,0 +1,20 @@
+{
+  "files": {
+    "main.css": "/wvms-front/static/css/main.37effbf5.chunk.css",
+    "main.js": "/wvms-front/static/js/main.12689f86.chunk.js",
+    "main.js.map": "/wvms-front/static/js/main.12689f86.chunk.js.map",
+    "runtime-main.js": "/wvms-front/static/js/runtime-main.f707b4c9.js",
+    "runtime-main.js.map": "/wvms-front/static/js/runtime-main.f707b4c9.js.map",
+    "static/js/2.b931be0b.chunk.js": "/wvms-front/static/js/2.b931be0b.chunk.js",
+    "static/js/2.b931be0b.chunk.js.map": "/wvms-front/static/js/2.b931be0b.chunk.js.map",
+    "index.html": "/wvms-front/index.html",
+    "static/css/main.37effbf5.chunk.css.map": "/wvms-front/static/css/main.37effbf5.chunk.css.map",
+    "static/js/2.b931be0b.chunk.js.LICENSE.txt": "/wvms-front/static/js/2.b931be0b.chunk.js.LICENSE.txt"
+  },
+  "entrypoints": [
+    "static/js/runtime-main.f707b4c9.js",
+    "static/js/2.b931be0b.chunk.js",
+    "static/css/main.37effbf5.chunk.css",
+    "static/js/main.12689f86.chunk.js"
+  ]
+}
