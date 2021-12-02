@@ -64,12 +64,6 @@ function App() {
     if(access_token) {
       dispatch(setToken(access_token));
       dispachProfile(access_token);
-      // history.push('/');
-     
-      // getProfile(access_token);
-      // console.log(response);
-      // if(response.status === 200) 
-      //   dispatch(setProfile(response.data));
     }
   }, [])
 
@@ -97,6 +91,14 @@ function App() {
           <PrivateRoute path="/Profile"  > 
             <ProfilePage />
           </PrivateRoute> 
+          <Route path="*">
+            <Redirect
+              to={{
+                pathname: "/",
+                // state: { from: location }
+              }}
+            />
+          </Route>
         </Switch>
         </ThemeProvider>
     </BrowserRouter>

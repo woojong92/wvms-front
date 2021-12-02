@@ -7,6 +7,8 @@ import { useHistory } from 'react-router-dom';
 import { useAppSelector } from 'hooks';
 import axios from 'axios';
 import moment from 'moment';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { faSpinner } from '@fortawesome/free-solid-svg-icons';
 import { timeFormat } from 'd3-time-format';
 import { TimeFormat_Ymd } from 'utils/timeFormatter';
 import { API_ADDRESS } from 'apis';
@@ -82,18 +84,35 @@ const ListItemBox = styled.div`
         font-size: 0.8rem;
         color: black;
     }
-
-    
-
 `;
+
+const StyledSpinner = styled.div`
+    width: 1rem;
+    height: 1rem;
+    animation: spin 2s linear infinite;
+
+    @keyframes spin {
+        from {
+            transform:rotate(0deg);
+        }
+        to {
+            transform:rotate(360deg);
+        }
+    }
+`;
+
+const Spinner = () => <StyledSpinner><FontAwesomeIcon icon={faSpinner} color={'#47BDFE'} /></StyledSpinner>
+
+
+
 
 function HomePage () {
     const history = useHistory();
-    // const {user} = useAppSelector(state => state.app)
-    const timeFormatter = timeFormat('%Y/%m/%d');
-
     const [commingVacations, setCommingVacations] = useState<any[]>([]);
     const [todayVacations, setTodayVacations]   = useState<any[]>([]);
+
+    const [loadingGetTodayVacations, setLoadingGetTodayVacations] = useState(false);
+    const [loadingGetCommingVacations, setLoadingGetCommingVacations] = useState(false);
 
     const getTodayVacations = async () => {
         // const localTime = moment().format('YYYY-MM-DD'); // store localTime
@@ -104,14 +123,17 @@ function HomePage () {
         const proposedEndDate = localTime + "T23:59:59.000Z";
 
         try{
+            setLoadingGetTodayVacations(true);
             const response = await axios({
                 url: `${API_ADDRESS}/vacations?from=${proposedStartDate}&to=${proposedEndDate}`,
                 method: 'get',
             })
             console.log(response);
             setTodayVacations(response.data);
+            setLoadingGetTodayVacations(false)
         }catch(e){
             console.log(e);
+            setLoadingGetTodayVacations(false)
         }
     }
 
@@ -122,14 +144,17 @@ function HomePage () {
         const proposedEndDate = endDate + "T23:59:59.000Z";
 
         try{
+            setLoadingGetCommingVacations(true);
             const response = await axios({
                 url: `${API_ADDRESS}/vacations?from=${proposedStartDate}&to=${proposedEndDate}`,
                 method: 'get',
             })
             console.log('getCommingVacations', response);
-            setCommingVacations(response.data.slice(1));
+            setCommingVacations(response.data);
+            setLoadingGetCommingVacations(false);
         }catch(e){
             console.log(e);
+            setLoadingGetCommingVacations(false);
         }
     }
 
@@ -144,12 +169,44 @@ function HomePage () {
                 <ListBox>
                     <ListTitleBox><span>나를 찾지 마세요 🏖</span></ListTitleBox>
                     {
+                        loadingGetTodayVacations ? <div style={{display: 'flex', justifyContent: 'center', alignItems: 'center' , height: '2rem', width: '100%'}}><Spinner /></div> : (
+                            todayVacations.length === 0 ? (
+                                <div style={{display: 'flex', height: '2rem',justifyContent: 'center', alignItems: 'center', fontSize: 12}}>현재 휴가중인 사람이 없습니다.</div>
+                            ) : (
+                                todayVacations.length ? (
+                                    todayVacations?.map(item => {
+                                        return (
+                                            <ListItemBox key={item._id}>
+                                                <div className="left">
+                                                    {/* <div style={{width: '38px', height: '38px', backgroundColor: 'skyblue', borderRadius: 16}}/> */}
+                                                    <img src={`${item?.member?.thumbnail}`} style={{width: '38px', height: '38px', backgroundColor: 'skyblue', borderRadius: 16}}/>
+                                                    <div className="left-name-box">
+                                                        <div className="name">{`${item?.member?.nickname || ''} (${item?.member?.name || ''})`}</div>
+                                                        <div className="position">{item?.member?.role || ''}</div>
+                                                    </div>
+                                                </div>
+                                                
+                                                <div className="right">
+                                                <div className="right-date">{`${TimeFormat_Ymd(new Date(item.startDate))} - ${TimeFormat_Ymd(new Date(item.endDate))}`}</div> 
+                                                <div className="right-type">{`${item.vacationType} / ${item.timeType} / ${item.usedDate}`}</div>
+                                                </div>
+                                            </ListItemBox>
+                                        )
+                                    })
+                                ) : (
+                                    null
+                                )
+                            )
+
+                        )
+                    }
+
+                    {/* {
                         todayVacations.length ? (
                             todayVacations?.map(item => {
                                 return (
                                     <ListItemBox key={item._id}>
                                         <div className="left">
-                                            {/* <div style={{width: '38px', height: '38px', backgroundColor: 'skyblue', borderRadius: 16}}/> */}
                                             <img src={`${item?.member?.thumbnail}`} style={{width: '38px', height: '38px', backgroundColor: 'skyblue', borderRadius: 16}}/>
                                             <div className="left-name-box">
                                                 <div className="name">{`${item?.member?.nickname || ''} (${item?.member?.name || ''})`}</div>
@@ -167,7 +224,7 @@ function HomePage () {
                         ) : (
                             null
                         )
-                    }
+                    } */}
                 </ListBox>
 
                 <ListBox>

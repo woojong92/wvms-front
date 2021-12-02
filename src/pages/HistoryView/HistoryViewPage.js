@@ -74,10 +74,10 @@ function HistoryViewPage () {
     }
     const [successRemove, setSuccessRemove] = useState(false);
 
-    const removeVacation = async (id) => {
+    const removeVacation = async (_id) => {
         try{
             const response = await axios({
-                url: `${API_ADDRESS}/api/vacations/${id}`,
+                url: `${API_ADDRESS}/vacations/${_id}`,
                 method: 'delete',
                 headers: { Authorization: `Bearer ${token}` },
             })
@@ -138,7 +138,7 @@ function HistoryViewPage () {
                 </div>
                 <div style={{display: 'flex', flexDirection: 'column', justifyContent:'space-between', alignItems: 'flex-start', padding: '1rem', borderBottom: '1px solid #e5e5e5'}}>
                     <div style={{marginBottom: '0.5rem'}}>휴가 사유</div>
-                    <div>{vacation.response ?  vacation.response : '휴가 사유가 없습니다. '}</div>
+                    <div>{vacation?.reason || '휴가 사유가 없습니다. '}</div>
                 </div>
 
                 <div 

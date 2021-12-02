@@ -94,6 +94,7 @@ function RegisterPage () {
             // }
             dispatch(setProfile(response.data.profile));
             dispatch(setToken(response.data.token));
+            localStorage.setItem("access_token", response.data.token);
         }catch(e){
             console.log('register Error : ', e.response)
         }

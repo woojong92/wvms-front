@@ -157,15 +157,15 @@ function ApplicationPage () {
 
     const handleDayClick = (current: moment.Moment) => {
         if( !moment().subtract(1,'day').isSameOrBefore(current) ) {
-            window.alert('휴가 신청을 할 수 없는 날짜 입니다.');
+            alert('휴가 신청을 할 수 없는 날짜 입니다.');
         }else if(submitObject.vacationType === ''){
-            window.alert('휴가 유형을 선택해주세요.')
+            alert('휴가 유형을 선택해주세요.')
         }else if(submitObject.timeType === ''){
-            window.alert('시간 유형을 선택해주세요.')
+            alert('시간 유형을 선택해주세요.')
         }else if(submitObject.timeType === '오전반차' || submitObject.timeType === '오후반차' ) {
             console.log('aaaa', thisYearVacationCounts.totalDate - thisYearVacationCounts.usedDate - 0.5);
-            if(thisYearVacationCounts.totalDate - thisYearVacationCounts.usedDate - 0.5 < 0) {
-                window.alert('죄송합니다. 남은 연차가 부족합니다.');
+            if( submitObject.vacationType === '연차' && thisYearVacationCounts.totalDate - thisYearVacationCounts.usedDate - 0.5 < 0) {
+                alert('죄송합니다. 남은 연차가 부족합니다.');
                 return;
             }
             setStartDate(current);
@@ -181,8 +181,8 @@ function ApplicationPage () {
             }else{
                 if(!startDate || startDate.isAfter(current) ) {
                     console.log('startDate', current)
-                    if(thisYearVacationCounts.totalDate - thisYearVacationCounts.usedDate - 1 < 0) {
-                        window.alert('죄송합니다. 남은 연차가 부족합니다.');
+                    if( submitObject.vacationType === '연차' && thisYearVacationCounts.totalDate - thisYearVacationCounts.usedDate - 1 < 0) {
+                        alert('죄송합니다. 남은 연차가 부족합니다.');
                         return;
                     }
 
@@ -194,8 +194,8 @@ function ApplicationPage () {
                     // let _endDate = moment(startDate).add(9, 'hours').format();
                     let _current = current;
                     let _usedDate = moment(_current.add(9,'hours')).diff(startDate, 'days') + 1;
-                    if(thisYearVacationCounts.totalDate - thisYearVacationCounts.usedDate - _usedDate < 0) {
-                        window.alert('죄송합니다. 남은 연차가 부족합니다.');
+                    if( submitObject.vacationType === '연차' && thisYearVacationCounts.totalDate - thisYearVacationCounts.usedDate - _usedDate < 0) {
+                        alert('죄송합니다. 남은 연차가 부족합니다.');
                         return;
                     }
                     
@@ -299,15 +299,15 @@ function ApplicationPage () {
 
     const handleSubmit = async () => {
         if(usedDate === 0) {
-            window.alert('휴가를 신청할 날짜를 선택하세요.')
+            alert('휴가를 신청할 날짜를 선택하세요.')
             return;
         }
+
         let data = { ...submitObject, 
             usedDate,
             startDate: moment(startDate).format(), 
             endDate: moment(endDate).format(), 
-
-        };
+        };        
 
         if(submitObject.timeType === '하루종일') {
             if(endDate === null) {
@@ -365,16 +365,6 @@ function ApplicationPage () {
         }
     }
 
-    // {
-    //     "vacationType": "Annual",
-    //     "timeType": "8h",
-    //     "startDate": "Mon Jul 28 2021 00:00:00 GMT+0900 (대한민국 표준시)",
-    //     "endDate": "Wed Jul 30 2021 23:59:59 GMT+0900 (대한민국 표준시)",
-    //     "reason": "테스트 입니다. 6",
-    //     "usedDate": 3
-    // }
-
-    const [apply, setApply] = useState(false);
     const [screenType, setScreenType] = useState('prev'); // prev, apply, success, fail
 
     if(screenType === 'prev') {
@@ -467,7 +457,7 @@ function ApplicationPage () {
                 </div>
 
                 <div>
-                    <div style={{margin: '1rem'}}>{`휴가 신청 후, 남은 연차 일수는 ${thisYearVacationCounts.totalDate - thisYearVacationCounts.usedDate - usedDate}일 입니다.`}</div>
+                    <div style={{margin: '1rem'}}>{`휴가 신청 후, 남은 연차 일수는 ${submitObject.vacationType === '연차' ? thisYearVacationCounts.totalDate - thisYearVacationCounts.usedDate - usedDate : thisYearVacationCounts.totalDate - thisYearVacationCounts.usedDate  }일 입니다.`}</div>
                     <div 
                         style={{background: '#1B73E8', color: 'white',  padding: '0.5rem', margin: '2rem 1rem', borderRadius: '16px', display: 'flex', justifyContent: 'center', alignItems: 'center'}}
                         onClick={() => handleSubmit()}
